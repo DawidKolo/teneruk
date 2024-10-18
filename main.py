@@ -2,6 +2,7 @@ import re
 import os
 from openpyxl import load_workbook
 
+# Define Input and output paths below
 path = ""
 path_out = ""
 
