@@ -22,21 +22,14 @@ for File in os.listdir(path + "\\" + "."):
 
         f = open(path + "\\" + fileList, "r")
         files = f.read()
+        pattern = ["P1", "P2", "P3", "P4"]
+        p_table = []
+        for p in pattern:
+            match_p = re.findall(p, files)
+            p_table.append(len(match_p))
 
-        match_p1 = re.findall("P1", files)
-        match_p2 = re.findall("P2", files)
-        match_p3 = re.findall("P3", files)
-        match_p4 = re.findall("P4", files)
+        print(p_table)
 
-        p_1 = len(match_p1)
-        p_2 = len(match_p2)
-        p_3 = len(match_p3)
-        p_4 = len(match_p4)
-
-        print("p1: " + str(p_1))
-        print("p2: " + str(p_2))
-        print("p3: " + str(p_3))
-        print("p4: " + str(p_4))
         f.close()
 
         myFileName = path_out + "\\" + "DemoFile2.xlsx"
@@ -54,10 +47,12 @@ for File in os.listdir(path + "\\" + "."):
 
         #write to the cell you want, specifying row and column, and value :-)
         ws.cell(column=1, row=newRowLocation, value=date)
-        ws.cell(column=2, row=newRowLocation, value=p_1)
-        ws.cell(column=3, row=newRowLocation, value=p_2)
-        ws.cell(column=4, row=newRowLocation, value=p_3)
-        ws.cell(column=5, row=newRowLocation, value=p_4)
+        ws.cell(column=2, row=newRowLocation, value=p_table[0])
+        ws.cell(column=3, row=newRowLocation, value=p_table[1])
+        ws.cell(column=4, row=newRowLocation, value=p_table[2])
+        ws.cell(column=5, row=newRowLocation, value=p_table[3])
+
+
         wb.save(filename=myFileName)
         wb.close()
     else:
