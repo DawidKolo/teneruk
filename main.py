@@ -3,8 +3,8 @@ import os
 from openpyxl import load_workbook
 
 # Define Input and output paths below
-path = ""
-path_out = ""
+path = "C:\\Users\\Dawid.Kolodziej1\\OneDrive - Precisely Inc\\Desktop\\000"
+path_out = "C:\\Users\\Dawid.Kolodziej1\\OneDrive - Precisely Inc\\Desktop\\001"
 
 for File in os.listdir(path + "\\" + "."):
     if File.endswith(".txt"):
@@ -14,8 +14,11 @@ for File in os.listdir(path + "\\" + "."):
         x = re.findall("[0-9]", fileList)
         x.insert(4, "-")
         x.insert(7, "-")
+
+
         date = "".join(x)
-        print(date)
+        sheet_name = date[0:7]
+
 
         f = open(path + "\\" + fileList, "r")
         files = f.read()
@@ -36,11 +39,15 @@ for File in os.listdir(path + "\\" + "."):
         print("p4: " + str(p_4))
         f.close()
 
-        myFileName = path_out + "\\" + "DemoFile.xlsx"
+        myFileName = path_out + "\\" + "DemoFile2.xlsx"
 
         #load the workbook, and put the sheet into a variable
         wb = load_workbook(filename=myFileName)
-        ws = wb['Sheet1']
+
+        if not sheet_name in wb.sheetnames:
+            wb.create_sheet(sheet_name)
+
+        ws = wb[sheet_name]
 
         #max_row is a sheet function that gets the last row in a sheet.
         newRowLocation = ws.max_row + 1
