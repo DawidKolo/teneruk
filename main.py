@@ -10,12 +10,11 @@ from openpyxl.utils import rows_from_range
 path = "C:\\test\\000"
 path_out = "C:\\test\\001"
 
-
 # creates list of files in the path directory
 filelist = os.listdir(path)
 if not os.path.isfile(path_out + "\\" + "a.xlsx"):
 
-    excell = xlsxwriter.Workbook(path_out +"\\"+ 'a.xlsx')
+    excell = xlsxwriter.Workbook(path_out + "\\" + 'a.xlsx')
     excell.close()
 else:
     pass
@@ -29,10 +28,7 @@ for file in filelist:
         # adding txt files to the list
         txt_files.append(file)
 
-
-
-
-# loop to go through txt filenames in the list and create a sheetname [date]
+        # loop to go through txt filenames in the list and create a sheetname [date]
         for txt_file in txt_files:
             x = re.findall("[0-9]", txt_file)
             x.insert(4, "-")
@@ -40,7 +36,6 @@ for file in filelist:
 
             date = "".join(x)
             sheet_name = date[0:7]
-
 
             # searching for pattern in the txt files and counting them
             f = open(path + "\\" + txt_file, "r")
@@ -52,7 +47,7 @@ for file in filelist:
                 p_table.append(len(match_p))
 
             f.close()
-        #print(date, p_table)
+        # print(date, p_table)
         myFileName = path_out + "\\" + "a.xlsx"
 
         # load the workbook, and put the sheet into a variable
@@ -63,9 +58,6 @@ for file in filelist:
             wb.create_sheet(sheet_name)
 
         ws = wb[sheet_name]
-
-
-
 
         # max_row is a sheet function that gets the last row in a sheet.
         newRowLocation = ws.max_row + 1
@@ -86,7 +78,6 @@ for file in filelist:
         wb.save(filename=myFileName)
         wb.close()
 
-
 myFileName = path_out + "\\" + "a.xlsx"
 sum_wb = load_workbook(filename=myFileName, data_only=True)
 list_of_sheets = sum_wb.sheetnames
@@ -98,7 +89,7 @@ for sheet in list_of_sheets:
     rows_count = worksheet.max_row
     column_count = worksheet.max_column
 
-
+    # Partial Sum and Total Monthly Sum
     first_row = 2
     last_row = rows_count
     sum_row = last_row + 3
@@ -112,7 +103,7 @@ for sheet in list_of_sheets:
             cell_sum_start = cell.column_letter + str(first_row)
             cell_sum_end = cell.column_letter + str(last_row)
             cell.value = '=SUM({0}:{1})'.format(cell_sum_start, cell_sum_end)
-            cell_address.append(('F',f'{cell.row}'))
+            cell_address.append(('F', f'{cell.row}'))
 
         cell_address = list(dict.fromkeys(cell_address))
 
@@ -130,8 +121,7 @@ for sheet in list_of_sheets:
             ee = E.replace('=', '+', 1)
 
             worksheet['F'f'{s[1]}'].value = B + cc + dd + ee
-            worksheet['F'f'{z-1}'].value = "Monthly Sum"
-
+            worksheet['F'f'{z - 1}'].value = "Monthly Sum"
 
 sum_wb.save(filename=myFileName)
 sum_wb.close()
