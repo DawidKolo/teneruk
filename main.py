@@ -1,5 +1,7 @@
 import re
 import os
+#from distutils.command.install import value
+
 from openpyxl import load_workbook
 from openpyxl.utils import rows_from_range
 
@@ -41,17 +43,20 @@ for file in filelist:
                 p_table.append(len(match_p))
 
             f.close()
-        print(date, p_table)
+        #print(date, p_table)
         myFileName = path_out + "\\" + "a.xlsx"
 
         # load the workbook, and put the sheet into a variable
-        wb = load_workbook(filename=myFileName)
+        wb = load_workbook(filename=myFileName, data_only=True)
 
         # creating a sheet in the workbook
         if not sheet_name in wb.sheetnames:
             wb.create_sheet(sheet_name)
 
         ws = wb[sheet_name]
+
+
+
 
         # max_row is a sheet function that gets the last row in a sheet.
         newRowLocation = ws.max_row + 1
@@ -65,8 +70,10 @@ for file in filelist:
 
         wb.save(filename=myFileName)
         wb.close()
+
+
 myFileName = path_out + "\\" + "a.xlsx"
-sum_wb = load_workbook(filename=myFileName)
+sum_wb = load_workbook(filename=myFileName, data_only=True)
 list_of_sheets = sum_wb.sheetnames
 
 for sheet in list_of_sheets:
@@ -77,17 +84,34 @@ for sheet in list_of_sheets:
     column_count = worksheet.max_column
 
 
-    first_column = 2
+    first_row = 2
     last_row = rows_count
     sum_row = last_row + 3
     start_col = 2
     end_col = column_count
 
-    for col in worksheet.iter_rows(min_row=sum_row, max_row=sum_row, min_col=start_col, max_col=end_col):
-        for cell in col:
-            cell_sum_start = cell.column_letter + str(first_column)
+    for row in worksheet.iter_rows(min_row=sum_row, max_row=sum_row, min_col=start_col, max_col=end_col):
+        cell_address = []
+
+        for cell in row:
+            cell_sum_start = cell.column_letter + str(first_row)
             cell_sum_end = cell.column_letter + str(last_row)
             cell.value = '=SUM({0}:{1})'.format(cell_sum_start, cell_sum_end)
+            cell_address.append(('F',f'{cell.row}'))
+
+        cell_address = list(dict.fromkeys(cell_address))
+
+        for s in cell_address:
+            B = worksheet[f'B{s[1]}'].value
+            C = worksheet[f'C{s[1]}'].value
+            cc = C.replace('=', '+', 1)
+
+            D = worksheet[f'D{s[1]}'].value
+            dd = D.replace('=', '+', 1)
+            E = worksheet[f'E{s[1]}'].value
+            ee = E.replace('=', '+', 1)
+
+            worksheet['F'f'{s[1]}'].value = B + cc + dd + ee
 
 
 
