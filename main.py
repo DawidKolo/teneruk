@@ -1,7 +1,8 @@
 import re
 import os
-#from distutils.command.install import value
+from fileinput import filename
 
+import xlsxwriter
 from openpyxl import load_workbook
 from openpyxl.utils import rows_from_range
 
@@ -9,9 +10,15 @@ from openpyxl.utils import rows_from_range
 path = "C:\\test\\000"
 path_out = "C:\\test\\001"
 
+
 # creates list of files in the path directory
 filelist = os.listdir(path)
+if not os.path.isfile(path_out + "\\" + "a.xlsx"):
 
+    excell = xlsxwriter.Workbook(path_out +"\\"+ 'a.xlsx')
+    excell.close()
+else:
+    pass
 # empty list to store the txt files
 txt_files = []
 
@@ -21,6 +28,8 @@ for file in filelist:
     if file.endswith(".txt"):
         # adding txt files to the list
         txt_files.append(file)
+
+
 
 
 # loop to go through txt filenames in the list and create a sheetname [date]
@@ -62,6 +71,12 @@ for file in filelist:
         newRowLocation = ws.max_row + 1
 
         # write to the cell you want, specifying row and column, and value :-)
+
+        ws.cell(column=2, row=1, value='P1')
+        ws.cell(column=3, row=1, value='P2')
+        ws.cell(column=4, row=1, value='P3')
+        ws.cell(column=5, row=1, value='P4')
+
         ws.cell(column=1, row=newRowLocation, value=date)
         ws.cell(column=2, row=newRowLocation, value=p_table[0])
         ws.cell(column=3, row=newRowLocation, value=p_table[1])
@@ -102,6 +117,9 @@ for sheet in list_of_sheets:
         cell_address = list(dict.fromkeys(cell_address))
 
         for s in cell_address:
+            a = s[1]
+            z = int(a)
+
             B = worksheet[f'B{s[1]}'].value
             C = worksheet[f'C{s[1]}'].value
             cc = C.replace('=', '+', 1)
@@ -112,7 +130,7 @@ for sheet in list_of_sheets:
             ee = E.replace('=', '+', 1)
 
             worksheet['F'f'{s[1]}'].value = B + cc + dd + ee
-
+            worksheet['F'f'{z-1}'].value = "Monthly Sum"
 
 
 sum_wb.save(filename=myFileName)
