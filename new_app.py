@@ -39,7 +39,7 @@ def create_sheetnames():
         sheet_name = date[0:7]
         sheet_names.append(sheet_name)
 
-    return sheet_names
+    return sheet_names, date
 
 def search_for_p():
     txt_files = collect_txt_filenames()
@@ -60,7 +60,7 @@ def search_for_p():
 
 def write_sheetname_to_wb():
 
-    sheetname = list(dict.fromkeys(create_sheetnames()))
+    sheetname = list(dict.fromkeys(create_sheetnames()[0]))
     for c in range(len(sheetname)):
         myFilename = path_out + xlsx_name
 
@@ -73,7 +73,32 @@ def write_sheetname_to_wb():
         wb.close()
 
 
+def insert_values_to_spreadsheet():
+    sheetname = list(dict.fromkeys(create_sheetnames()[0]))
+    myFilename = path_out + xlsx_name
+    workbook = load_workbook(filename=myFilename)
 
 
-print(create_sheetnames())
+
+    for w in range(len(sheetname)):
+        ws = workbook[sheetname[w]]
+
+    newRowLocation = ws.max_row + 1
+
+    ws.cell(column=2, row=1, value='P1')
+    workbook.save(filename=myFilename)
+    workbook.close()
+    return ws
+
 write_sheetname_to_wb()
+insert_values_to_spreadsheet()
+
+
+
+
+
+
+
+
+#print(create_sheetnames())
+#write_sheetname_to_wb()
