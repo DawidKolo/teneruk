@@ -11,6 +11,7 @@ path_out = "C:\\test\\001"
 
 filelist = os.listdir(path)
 xlsx_name = "\\new_app.xlsx"
+pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 
 def check_xls_file():
     if not os.path.isfile(path_out + xlsx_name):
@@ -47,7 +48,7 @@ def search_for_p():
     for txt_file in txt_files:
         f = open(path + "\\" + txt_file, "r")
         files = f.read()
-        pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+
         p_table = []
 
         for p in pattern:
@@ -85,7 +86,9 @@ def insert_values_to_spreadsheet():
 
     newRowLocation = ws.max_row + 1
 
-    ws.cell(column=2, row=1, value='P1')
+    for n in range(0, 8):
+        ws.cell(column=2+n, row=2, value=pattern[n])
+
     workbook.save(filename=myFilename)
     workbook.close()
     return ws
