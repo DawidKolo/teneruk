@@ -30,12 +30,16 @@ def collect_txt_filenames():
 
 def get_week_of_year():
     date_for_week = create_sheetnames()[1]
-    year = int(date_for_week[:4])
-    month = int(date_for_week[5:7])
-    day = int(date_for_week[8:10])
-    week = datetime.date(year, month, day).isocalendar()[1]
+    week_of_year = []
+    for i in range(len(date_for_week)):
 
-    return week
+        year = int(date_for_week[i][:4])
+        month = int(date_for_week[i][5:7])
+        day = int(date_for_week[i][8:10])
+        week = datetime.date(year, month, day).isocalendar()[1]
+        week_of_year.append(week)
+    print(week_of_year)
+    return week_of_year
 
 
 
@@ -44,6 +48,7 @@ def get_week_of_year():
 def create_sheetnames():
     txt_files = collect_txt_filenames()
     sheet_names = []
+    timestamp = []
     for txt_file in txt_files:
         x = re.findall("[0-9]", txt_file)
         x.insert(4, "-")
@@ -52,8 +57,9 @@ def create_sheetnames():
         date = "".join(x)
         sheet_name = date[0:7]
         sheet_names.append(sheet_name)
+        timestamp.append(date)
 
-    return sheet_names, date
+    return sheet_names, timestamp
 
 def search_for_p():
     txt_files = collect_txt_filenames()
@@ -115,6 +121,6 @@ def insert_values_to_spreadsheet():
 
 
 get_week_of_year()
-
+print(create_sheetnames())
 #print(create_sheetnames())
 #write_sheetname_to_wb()
