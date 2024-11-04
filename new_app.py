@@ -1,5 +1,6 @@
 import re
 import os
+import datetime
 
 import xlsxwriter
 from openpyxl import load_workbook
@@ -17,9 +18,8 @@ def check_xls_file():
     if not os.path.isfile(path_out + xlsx_name):
         excel = xlsxwriter.Workbook(path_out + xlsx_name)
         excel.close()
-    else:
-        pass
-    return
+        return True
+
 
 def collect_txt_filenames():
     txt_files = []
@@ -27,6 +27,19 @@ def collect_txt_filenames():
         if file.endswith(".txt"):
             txt_files.append(file)
     return txt_files
+
+def get_week_of_year():
+    date_for_week = create_sheetnames()[1]
+    year = int(date_for_week[:4])
+    month = int(date_for_week[5:7])
+    day = int(date_for_week[8:10])
+    week = datetime.date(year, month, day).isocalendar()[1]
+
+    return week
+
+
+
+
 
 def create_sheetnames():
     txt_files = collect_txt_filenames()
@@ -84,17 +97,15 @@ def insert_values_to_spreadsheet():
     for w in range(len(sheetname)):
         ws = workbook[sheetname[w]]
 
-    newRowLocation = ws.max_row + 1
+        newRowLocation = ws.max_row + 1
 
-    for n in range(0, 8):
-        ws.cell(column=2+n, row=2, value=pattern[n])
+        for n in range(0, 8):
+            ws.cell(column=2+n, row=2, value=pattern[n])
 
     workbook.save(filename=myFilename)
     workbook.close()
     return ws
 
-write_sheetname_to_wb()
-insert_values_to_spreadsheet()
 
 
 
@@ -102,6 +113,8 @@ insert_values_to_spreadsheet()
 
 
 
+
+get_week_of_year()
 
 #print(create_sheetnames())
 #write_sheetname_to_wb()
