@@ -102,24 +102,26 @@ def write_sheetname_to_wb():
 # Writes the P values to the spreadsheets
 def insert_values_to_spreadsheet():
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))
+    date = create_sheetnames()[1]
+    p_table = search_for_p()
     myFilename = path_out + xlsx_name
     workbook = load_workbook(filename=myFilename)
-
-
 
     for w in range(len(sheetname)):
         ws = workbook[sheetname[w]]
 
-        newRowLocation = ws.max_row + 1
-
         for n in range(0, 8):
-            ws.cell(column=2+n, row=2, value=pattern[n])
-
-    workbook.save(filename=myFilename)
-    workbook.close()
-    return ws
+            ws.cell(column=2+n, row=1, value=pattern[n])
 
 
+        for item in range(len(date)):
+            if date[item][0:7] == sheetname[w]:
+
+                ws.cell(column=1, row=ws.max_row + 1, value=date[item])
+                for p in range(0,8):
+                    ws.cell(column=2+p, row=ws.max_row, value=p_table[item][p])
+            workbook.save(filename=myFilename)
+        workbook.close()
 
 
 
@@ -127,7 +129,6 @@ def insert_values_to_spreadsheet():
 
 
 
-get_week_of_year()
-print(create_sheetnames())
-#print(create_sheetnames())
-#write_sheetname_to_wb()
+
+
+
