@@ -123,6 +123,59 @@ def insert_values_to_spreadsheet():
             workbook.save(filename=myFilename)
         workbook.close()
 
+def insert_monthly_sums_to_spreadsheet():
+    sh_name = list(dict.fromkeys(create_sheetnames()[0]))
+
+    myFilename = path_out + xlsx_name
+    workbook = load_workbook(filename=myFilename)
+
+    for sh in range(len(sh_name)):
+        ws = workbook[sh_name[sh]]
+
+
+        ws.cell(column=2, row=25, value="=SUM(B1:B24)")
+        ws.cell(column=3, row=25, value="=SUM(C1:C24)")
+        ws.cell(column=4, row=25, value="=SUM(D1:D24)")
+        ws.cell(column=5, row=25, value="=SUM(E1:E24)")
+        ws.cell(column=6, row=25, value="=SUM(F1:F24)")
+        ws.cell(column=7, row=25, value="=SUM(G1:G24)")
+        ws.cell(column=8, row=25, value="=SUM(H1:H24)")
+        ws.cell(column=9, row=25, value="=SUM(I1:I24)")
+        ws.cell(column=10, row=25, value="=SUM(B25:I25)")
+
+
+    workbook.save(filename=myFilename)
+    workbook.close()
+
+def insert_weakly_sums_to_spreadsheet():
+    sh_name = list(dict.fromkeys(create_sheetnames()[0]))
+
+    myFilename = path_out + xlsx_name
+    workbook = load_workbook(filename=myFilename)
+
+    for sh in range(len(sh_name)):
+        ws = workbook[sh_name[sh]]
+
+
+        ws.cell(column=2, row=10, value="=SUM(B1:B8)")
+        ws.cell(column=3, row=10, value="=SUM(C1:C8)")
+        ws.cell(column=4, row=10, value="=SUM(D1:D8)")
+        ws.cell(column=5, row=10, value="=SUM(E1:E8)")
+        ws.cell(column=6, row=10, value="=SUM(F1:F8)")
+        ws.cell(column=7, row=10, value="=SUM(G1:G8)")
+        ws.cell(column=8, row=10, value="=SUM(H1:H8)")
+        ws.cell(column=9, row=10, value="=SUM(I1:I8)")
+        ws.cell(column=10, row=10, value="=SUM(B10:I10)")
+
+
+    workbook.save(filename=myFilename)
+    workbook.close()
+
+
+
+
+insert_monthly_sums_to_spreadsheet()
+
 
 
 
