@@ -171,9 +171,10 @@ def insert_weakly_sums_to_spreadsheet():
     workbook.save(filename=myFilename)
     workbook.close()
 
-
-
-
+check_xls_file()
+search_for_p()
+write_sheetname_to_wb()
+insert_values_to_spreadsheet()
 insert_monthly_sums_to_spreadsheet()
 
 
