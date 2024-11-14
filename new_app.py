@@ -32,7 +32,7 @@ def collect_txt_filenames():
     return txt_files
 
 
-# gets dates from the filenames and adds them to the list, returns list of integers
+# gets dates from the filenames and adds them to the list, returns list of tuples of integers
 def get_week_of_year():
     date_for_week = create_sheetnames()[1]
     week_of_year = []
@@ -42,7 +42,7 @@ def get_week_of_year():
         month = int(date_for_week[i][5:7])
         day = int(date_for_week[i][8:10])
         week = datetime.date(year, month, day).isocalendar()[1]
-        week_of_year.append(week)
+        week_of_year.append((week,year))
 
     return week_of_year
 
@@ -63,6 +63,16 @@ def create_sheetnames():
         timestamp.append(date)
 
     return sheet_names, timestamp
+
+
+def create_sheetnames_weekly():
+    week = get_week_of_year()
+
+    weekly_sheetnames = []
+
+    for item in week:
+        weekly_sheetnames.append(str(item[0]) + "-" + str(item[1]))
+    print(weekly_sheetnames)
 
 
 # searches for P1,P2 etc. from the pattern list in txt files, returns a list
@@ -171,13 +181,13 @@ def insert_weakly_sums_to_spreadsheet():
     workbook.save(filename=myFilename)
     workbook.close()
 
-check_xls_file()
-search_for_p()
-write_sheetname_to_wb()
-insert_values_to_spreadsheet()
-insert_monthly_sums_to_spreadsheet()
+# check_xls_file()
+# search_for_p()
+# write_sheetname_to_wb()
+# insert_values_to_spreadsheet()
+# insert_monthly_sums_to_spreadsheet()
 
-
+create_sheetnames_weekly()
 
 
 
