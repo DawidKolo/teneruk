@@ -1,8 +1,10 @@
 import re
 import os
 import datetime
+from calendar import month
 
 import xlsxwriter
+from Tools.scripts.stable_abi import itemclass
 from openpyxl import load_workbook
 
 
@@ -11,7 +13,7 @@ path = "C:\\test\\000"
 path_out = "C:\\test\\001"
 
 filelist = os.listdir(path)
-xlsx_name = "\\new_app.xlsx"
+xlsx_name = "\\test_week.xlsx"
 pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 
 
@@ -67,12 +69,21 @@ def create_sheetnames():
 
 def create_sheetnames_weekly():
     week = get_week_of_year()
-
+    txt_files = collect_txt_filenames()
     weekly_sheetnames = []
+
+    timestamp = []
+    for txt_file in txt_files:
+        x = re.findall("[0-9]", txt_file)
+        x.insert(4, "-")
+        x.insert(7, "-")
+        date = "".join(x)
+        timestamp.append(date)
 
     for item in week:
         weekly_sheetnames.append(str(item[0]) + "-" + str(item[1]))
     print(weekly_sheetnames)
+    return weekly_sheetnames, timestamp
 
 
 # searches for P1,P2 etc. from the pattern list in txt files, returns a list
@@ -97,7 +108,21 @@ def search_for_p():
 # writes sheetname to the workbook
 def write_sheetname_to_wb():
 
-    sheetname = list(dict.fromkeys(create_sheetnames()[0]))
+    sheetname = list(dict.fromkeys(create_sheetnames_weekly()))
+    for c in range(len(sheetname)):
+        myFilename = path_out + xlsx_name
+
+        wb = load_workbook(filename=myFilename)
+
+        if not sheetname in wb.sheetnames:
+            wb.create_sheet(sheetname[c])
+
+        wb.save(filename=myFilename)
+        wb.close()
+
+# writes weekly related sheetnames to workbook
+def write_weekly_sheetname_to_wb():
+    sheetname = list(dict.fromkeys(create_sheetnames_weekly()[0]))
     for c in range(len(sheetname)):
         myFilename = path_out + xlsx_name
 
@@ -132,6 +157,43 @@ def insert_values_to_spreadsheet():
                     ws.cell(column=2+p, row=ws.max_row, value=p_table[item][p])
             workbook.save(filename=myFilename)
         workbook.close()
+
+
+
+# inserts weekly values to spreadsheet
+def insert_values_to_spreadsheet_weekly():
+    sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))
+    date = create_sheetnames_weekly()[1]
+    p_table = search_for_p()
+
+
+
+    myFilename = path_out + xlsx_name
+    workbook = load_workbook(filename=myFilename)
+
+    for w in range(len(sh_name)):
+        ws = workbook[sh_name[w]]
+
+        for n in range(0, 8):
+            ws.cell(column=2+n, row=1, value=pattern[n])
+
+        list_week_year = []
+        for item in range(len(date)):
+            year = int(date[item][:4])
+            month = int(date[item][5:7])
+            day = int(date[item][8:10])
+            week = str(datetime.date(year, month, day).isocalendar()[1])
+            list_week_year.append(week + "-" + str(year))
+
+
+            if list_week_year[item] == sh_name[w]:
+
+                ws.cell(column=1, row=ws.max_row + 1, value=date[item])
+                for p in range(0,8):
+                    ws.cell(column=2+p, row=ws.max_row, value=p_table[item][p])
+            workbook.save(filename=myFilename)
+        workbook.close()
+
 
 def insert_monthly_sums_to_spreadsheet():
     sh_name = list(dict.fromkeys(create_sheetnames()[0]))
@@ -181,14 +243,15 @@ def insert_weakly_sums_to_spreadsheet():
     workbook.save(filename=myFilename)
     workbook.close()
 
-# check_xls_file()
-# search_for_p()
+#check_xls_file()
+#print(search_for_p())
 # write_sheetname_to_wb()
 # insert_values_to_spreadsheet()
 # insert_monthly_sums_to_spreadsheet()
 
-create_sheetnames_weekly()
-
+#create_sheetnames_weekly()
+write_weekly_sheetname_to_wb()
+insert_values_to_spreadsheet_weekly()
 
 
 
