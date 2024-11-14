@@ -1,10 +1,7 @@
 import re
 import os
 import datetime
-from calendar import month
-
 import xlsxwriter
-from Tools.scripts.stable_abi import itemclass
 from openpyxl import load_workbook
 
 
@@ -82,7 +79,7 @@ def create_sheetnames_weekly():
 
     for item in week:
         weekly_sheetnames.append(str(item[0]) + "-" + str(item[1]))
-    print(weekly_sheetnames)
+
     return weekly_sheetnames, timestamp
 
 
@@ -214,13 +211,34 @@ def insert_monthly_sums_to_spreadsheet():
         ws.cell(column=8, row=25, value="=SUM(H1:H24)")
         ws.cell(column=9, row=25, value="=SUM(I1:I24)")
         ws.cell(column=10, row=25, value="=SUM(B25:I25)")
+        ws.cell(column=10, row=24, value="Monthly Sum")
+
+        #keys
+        ws.cell(column=12, row=2, value="Keys")
+        ws.cell(column=12, row=3, value="P1")
+        ws.cell(column=12, row=4, value="P2")
+        ws.cell(column=12, row=5, value="P3")
+        ws.cell(column=12, row=6, value="P4")
+        ws.cell(column=12, row=7, value="P5")
+        ws.cell(column=12, row=8, value="P6")
+        ws.cell(column=12, row=9, value="P7")
+        ws.cell(column=12, row=10, value="P8")
+
+        ws.cell(column=13, row=3, value="Returned undeliverable mail")
+        ws.cell(column=13, row=4, value="Returned mail for processing")
+        ws.cell(column=13, row=5, value="Complaints")
+        ws.cell(column=13, row=6, value="WEB Loyalty mail")
+        ws.cell(column=13, row=7, value="Claims packages")
+        ws.cell(column=13, row=8, value="Keys/ Returned Key")
+        ws.cell(column=13, row=9, value="Tenerity Recorded mail / Special Delivery / Signed for")
+        ws.cell(column=13, row=10, value="Personal Recorded mail / Special Delivery / Signed for")
 
 
     workbook.save(filename=myFilename)
     workbook.close()
 
-def insert_weakly_sums_to_spreadsheet():
-    sh_name = list(dict.fromkeys(create_sheetnames()[0]))
+def insert_weekly_sums_to_spreadsheet():
+    sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))
 
     myFilename = path_out + xlsx_name
     workbook = load_workbook(filename=myFilename)
@@ -238,10 +256,34 @@ def insert_weakly_sums_to_spreadsheet():
         ws.cell(column=8, row=10, value="=SUM(H1:H8)")
         ws.cell(column=9, row=10, value="=SUM(I1:I8)")
         ws.cell(column=10, row=10, value="=SUM(B10:I10)")
+        ws.cell(column=10, row=9, value="Weekly Sum")
+
+        # keys
+        ws.cell(column=12, row=2, value="Keys")
+        ws.cell(column=12, row=3, value="P1")
+        ws.cell(column=12, row=4, value="P2")
+        ws.cell(column=12, row=5, value="P3")
+        ws.cell(column=12, row=6, value="P4")
+        ws.cell(column=12, row=7, value="P5")
+        ws.cell(column=12, row=8, value="P6")
+        ws.cell(column=12, row=9, value="P7")
+        ws.cell(column=12, row=10, value="P8")
+
+        ws.cell(column=13, row=3, value="Returned undeliverable mail")
+        ws.cell(column=13, row=4, value="Returned mail for processing")
+        ws.cell(column=13, row=5, value="Complaints")
+        ws.cell(column=13, row=6, value="WEB Loyalty mail")
+        ws.cell(column=13, row=7, value="Claims packages")
+        ws.cell(column=13, row=8, value="Keys/ Returned Key")
+        ws.cell(column=13, row=9, value="Tenerity Recorded mail / Special Delivery / Signed for")
+        ws.cell(column=13, row=10, value="Personal Recorded mail / Special Delivery / Signed for")
 
 
     workbook.save(filename=myFilename)
     workbook.close()
+
+
+
 
 #check_xls_file()
 #print(search_for_p())
@@ -252,7 +294,7 @@ def insert_weakly_sums_to_spreadsheet():
 #create_sheetnames_weekly()
 write_weekly_sheetname_to_wb()
 insert_values_to_spreadsheet_weekly()
-
+insert_weekly_sums_to_spreadsheet()
 
 
 
