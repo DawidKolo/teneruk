@@ -5,8 +5,7 @@ import sys
 
 import xlsxwriter
 from openpyxl import load_workbook
-import openpyxl
-
+from openpyxl.styles import Alignment
 # variables
 path = "C:\\test\\000"
 path_out = "C:\\test\\001"
@@ -203,6 +202,13 @@ def insert_monthly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
+        ws.column_dimensions['A'].width = 10
+        ws.column_dimensions['J'].width = 12
+        ws.column_dimensions['M'].width = 45
+        cell_set = ws['A1':'L10']
+        for cell in cell_set:
+            for c in cell:
+                c.alignment = Alignment(horizontal='center')
         sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
                  "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(B25:I25)"]
         for s2 in range(len(sums2)):
@@ -232,6 +238,14 @@ def insert_weekly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
+        ws.column_dimensions['A'].width = 10
+        ws.column_dimensions['J'].width = 12
+        ws.column_dimensions['M'].width = 45
+        cell_set = ws['A1':'L10']
+        for cell in cell_set:
+            for c in cell:
+                c.alignment = Alignment(horizontal='center')
+
         sums = ["=SUM(B1:B8)", "=SUM(C1:C8)", "=SUM(D1:D8)", "=SUM(E1:E8)", "=SUM(F1:F8)", "=SUM(G1:G8)", "=SUM(H1:H8)",
                 "=SUM(I1:I8)", "=SUM(B10:I10)"]
 
