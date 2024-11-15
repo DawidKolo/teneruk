@@ -2,10 +2,10 @@ import re
 import os
 import datetime
 import sys
-from platform import system
 
 import xlsxwriter
 from openpyxl import load_workbook
+import openpyxl
 
 # variables
 path = "C:\\test\\000"
@@ -216,24 +216,15 @@ def insert_monthly_sums_to_spreadsheet():
         ws.cell(column=10, row=24, value="Monthly Sum")
 
         # keys
-        ws.cell(column=12, row=2, value="Keys")
-        ws.cell(column=12, row=3, value="P1")
-        ws.cell(column=12, row=4, value="P2")
-        ws.cell(column=12, row=5, value="P3")
-        ws.cell(column=12, row=6, value="P4")
-        ws.cell(column=12, row=7, value="P5")
-        ws.cell(column=12, row=8, value="P6")
-        ws.cell(column=12, row=9, value="P7")
-        ws.cell(column=12, row=10, value="P8")
+        keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+        for key in range(len(keys)):
+            ws.cell(column=12, row=key + 2, value=keys[key])
 
-        ws.cell(column=13, row=3, value="Returned undeliverable mail")
-        ws.cell(column=13, row=4, value="Returned mail for processing")
-        ws.cell(column=13, row=5, value="Complaints")
-        ws.cell(column=13, row=6, value="WEB Loyalty mail")
-        ws.cell(column=13, row=7, value="Claims packages")
-        ws.cell(column=13, row=8, value="Keys/ Returned Key")
-        ws.cell(column=13, row=9, value="Tenerity Recorded mail / Special Delivery / Signed for")
-        ws.cell(column=13, row=10, value="Personal Recorded mail / Special Delivery / Signed for")
+        legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
+                  "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
+                  "Personal Recorded mail / Special Delivery / Signed for"]
+        for k in range(len(legend)):
+            ws.cell(column=13, row=k + 3, value=legend[k])
 
     workbook.save(filename=myFilename)
     workbook.close()
@@ -260,30 +251,21 @@ def insert_weekly_sums_to_spreadsheet():
         ws.cell(column=10, row=9, value="Weekly Sum")
 
         # keys
-        ws.cell(column=12, row=2, value="Keys")
-        ws.cell(column=12, row=3, value="P1")
-        ws.cell(column=12, row=4, value="P2")
-        ws.cell(column=12, row=5, value="P3")
-        ws.cell(column=12, row=6, value="P4")
-        ws.cell(column=12, row=7, value="P5")
-        ws.cell(column=12, row=8, value="P6")
-        ws.cell(column=12, row=9, value="P7")
-        ws.cell(column=12, row=10, value="P8")
+        keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+        for key in range(len(keys)):
+            ws.cell(column=12, row=key + 2, value=keys[key])
 
-        ws.cell(column=13, row=3, value="Returned undeliverable mail")
-        ws.cell(column=13, row=4, value="Returned mail for processing")
-        ws.cell(column=13, row=5, value="Complaints")
-        ws.cell(column=13, row=6, value="WEB Loyalty mail")
-        ws.cell(column=13, row=7, value="Claims packages")
-        ws.cell(column=13, row=8, value="Keys/ Returned Key")
-        ws.cell(column=13, row=9, value="Tenerity Recorded mail / Special Delivery / Signed for")
-        ws.cell(column=13, row=10, value="Personal Recorded mail / Special Delivery / Signed for")
+        legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
+                  "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
+                  "Personal Recorded mail / Special Delivery / Signed for"]
+        for k in range(len(legend)):
+            ws.cell(column=13, row=k + 3, value=legend[k])
 
     workbook.save(filename=myFilename)
     workbook.close()
 
 
-type_of_report = input('What type of report you would like to create? [m - monthly | w - weekly] ').lower()
+type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
     check_xls_file()
     search_for_p()
