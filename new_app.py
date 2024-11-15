@@ -52,6 +52,31 @@ def get_week_of_year():
     return week_of_year
 
 
+def paint_worksheets(ws):
+
+    ws.column_dimensions['A'].width = 10
+    ws.column_dimensions['J'].width = 12
+    ws.column_dimensions['M'].width = 45
+    cell_set = ws['A1':'L30']
+    for cell in cell_set:
+        for c in cell:
+            c.alignment = Alignment(horizontal='center')
+
+def keys(ws):
+    # keys
+    keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+    for key in range(len(keys)):
+        ws.cell(column=12, row=key + 2, value=keys[key])
+
+    legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
+              "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
+              "Personal Recorded mail / Special Delivery / Signed for"]
+    for k in range(len(legend)):
+        ws.cell(column=13, row=k + 3, value=legend[k])
+
+
+
+
 # creates a sheetnames out of filenames, returns a tuple of lists of strings
 def create_sheetnames():
     txt_files = collect_txt_filenames()
@@ -202,29 +227,15 @@ def insert_monthly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
-        ws.column_dimensions['A'].width = 10
-        ws.column_dimensions['J'].width = 12
-        ws.column_dimensions['M'].width = 45
-        cell_set = ws['A1':'L10']
-        for cell in cell_set:
-            for c in cell:
-                c.alignment = Alignment(horizontal='center')
+        paint_worksheets(ws)
+
         sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
                  "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(B25:I25)"]
         for s2 in range(len(sums2)):
             ws.cell(column=s2+2, row=25, value=sums2[s2])
         ws.cell(column=10, row=24, value="Monthly Sum")
+        keys(ws)
 
-        # keys
-        keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
-        for key in range(len(keys)):
-            ws.cell(column=12, row=key + 2, value=keys[key])
-
-        legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
-                  "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
-                  "Personal Recorded mail / Special Delivery / Signed for"]
-        for k in range(len(legend)):
-            ws.cell(column=13, row=k + 3, value=legend[k])
 
     workbook.save(filename=myFilename)
     workbook.close()
@@ -238,13 +249,7 @@ def insert_weekly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
-        ws.column_dimensions['A'].width = 10
-        ws.column_dimensions['J'].width = 12
-        ws.column_dimensions['M'].width = 45
-        cell_set = ws['A1':'L10']
-        for cell in cell_set:
-            for c in cell:
-                c.alignment = Alignment(horizontal='center')
+        paint_worksheets(ws)
 
         sums = ["=SUM(B1:B8)", "=SUM(C1:C8)", "=SUM(D1:D8)", "=SUM(E1:E8)", "=SUM(F1:F8)", "=SUM(G1:G8)", "=SUM(H1:H8)",
                 "=SUM(I1:I8)", "=SUM(B10:I10)"]
@@ -253,16 +258,7 @@ def insert_weekly_sums_to_spreadsheet():
             ws.cell(column=sum+2, row=10, value=sums[sum])
         ws.cell(column=10, row=9, value="Weekly Sum")
 
-        # keys
-        keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
-        for key in range(len(keys)):
-            ws.cell(column=12, row=key + 2, value=keys[key])
-
-        legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
-                  "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
-                  "Personal Recorded mail / Special Delivery / Signed for"]
-        for k in range(len(legend)):
-            ws.cell(column=13, row=k + 3, value=legend[k])
+        keys(ws)
 
     workbook.save(filename=myFilename)
     workbook.close()
