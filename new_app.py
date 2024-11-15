@@ -203,16 +203,10 @@ def insert_monthly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
-
-        ws.cell(column=2, row=25, value="=SUM(B1:B24)")
-        ws.cell(column=3, row=25, value="=SUM(C1:C24)")
-        ws.cell(column=4, row=25, value="=SUM(D1:D24)")
-        ws.cell(column=5, row=25, value="=SUM(E1:E24)")
-        ws.cell(column=6, row=25, value="=SUM(F1:F24)")
-        ws.cell(column=7, row=25, value="=SUM(G1:G24)")
-        ws.cell(column=8, row=25, value="=SUM(H1:H24)")
-        ws.cell(column=9, row=25, value="=SUM(I1:I24)")
-        ws.cell(column=10, row=25, value="=SUM(B25:I25)")
+        sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
+                 "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(B25:I25)"]
+        for s2 in range(len(sums2)):
+            ws.cell(column=s2+2, row=25, value=sums2[s2])
         ws.cell(column=10, row=24, value="Monthly Sum")
 
         # keys
@@ -238,16 +232,11 @@ def insert_weekly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
+        sums = ["=SUM(B1:B8)", "=SUM(C1:C8)", "=SUM(D1:D8)", "=SUM(E1:E8)", "=SUM(F1:F8)", "=SUM(G1:G8)", "=SUM(H1:H8)",
+                "=SUM(I1:I8)", "=SUM(B10:I10)"]
 
-        ws.cell(column=2, row=10, value="=SUM(B1:B8)")
-        ws.cell(column=3, row=10, value="=SUM(C1:C8)")
-        ws.cell(column=4, row=10, value="=SUM(D1:D8)")
-        ws.cell(column=5, row=10, value="=SUM(E1:E8)")
-        ws.cell(column=6, row=10, value="=SUM(F1:F8)")
-        ws.cell(column=7, row=10, value="=SUM(G1:G8)")
-        ws.cell(column=8, row=10, value="=SUM(H1:H8)")
-        ws.cell(column=9, row=10, value="=SUM(I1:I8)")
-        ws.cell(column=10, row=10, value="=SUM(B10:I10)")
+        for sum in range(len(sums)):
+            ws.cell(column=sum+2, row=10, value=sums[sum])
         ws.cell(column=10, row=9, value="Weekly Sum")
 
         # keys
