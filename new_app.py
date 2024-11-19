@@ -5,7 +5,8 @@ import sys
 
 import xlsxwriter
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
+
 # variables
 path = "C:\\test\\000"
 path_out = "C:\\test\\001"
@@ -52,29 +53,49 @@ def get_week_of_year():
     return week_of_year
 
 
-def paint_worksheets(ws):
+def paint_worksheets(ws, line):
+    last_line = insert_values_to_spreadsheet_weekly()[line]
+    print(last_line)
 
     ws.column_dimensions['A'].width = 10
     ws.column_dimensions['J'].width = 12
     ws.column_dimensions['M'].width = 45
-    cell_set = ws['A1':'L30']
+    cell_set = ws['A1':'L26']
     for cell in cell_set:
         for c in cell:
             c.alignment = Alignment(horizontal='center')
+    thick = Side(border_style="thick", color="000000")
+    for border_cell in ws.iter_cols(min_col=1, max_col=9, min_row=last_line+1, max_row=last_line+1):
+        for brdc in border_cell:
+            brdc.border = Border(bottom=thick)
+
+
+    for bold_cell in ws.iter_cols(min_col=2, max_col=9, min_row=1, max_row=1):
+        for bc in bold_cell:
+            bc.font = Font(bold=True)
+            bc.fill = PatternFill(start_color="6600CC", end_color="6600CC", fill_type="solid")
+
+    for rows in ws.iter_cols(min_row=1, max_row=1, min_col=12, max_col=12):
+        for cell in rows:
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="6600CC", end_color="6600CC", fill_type="solid")
+
+    for t in ws.iter_cols(min_row=24, max_row=25, min_col=2, max_col=10):
+        for cell in t:
+            cell.font = Font(bold=True)
+
 
 def keys(ws):
     # keys
     keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
     for key in range(len(keys)):
-        ws.cell(column=12, row=key + 2, value=keys[key])
+        ws.cell(column=12, row=key + 1, value=keys[key])
 
     legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
               "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
               "Personal Recorded mail / Special Delivery / Signed for"]
     for k in range(len(legend)):
-        ws.cell(column=13, row=k + 3, value=legend[k])
-
-
+        ws.cell(column=13, row=k + 2, value=legend[k])
 
 
 # creates a sheetnames out of filenames, returns a tuple of lists of strings
@@ -167,25 +188,31 @@ def write_weekly_sheetname_to_wb():
 def insert_values_to_spreadsheet():
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))
     date = create_sheetnames()[1]
+
     p_table = search_for_p()
     myFilename = path_out + month_xlsx_name
     workbook = load_workbook(filename=myFilename)
-
+    outer_val = []
     for w in range(len(sheetname)):
         ws = workbook[sheetname[w]]
 
         for n in range(0, 8):
             ws.cell(column=2 + n, row=1, value=pattern[n])
 
+        inner_val = []
         for item in range(len(date)):
             if date[item][0:7] == sheetname[w]:
 
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])
+
                 for p in range(0, 8):
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
+                inner_val.append(date[item])
             workbook.save(filename=myFilename)
-        workbook.close()
 
+        outer_val.append(len(inner_val))
+        workbook.close()
+    return outer_val
 
 # inserts weekly values to spreadsheet
 def insert_values_to_spreadsheet_weekly():
@@ -195,7 +222,7 @@ def insert_values_to_spreadsheet_weekly():
 
     myFilename = path_out + week_xlsx_name
     workbook = load_workbook(filename=myFilename)
-
+    outer_val = []
     for w in range(len(sh_name)):
         ws = workbook[sh_name[w]]
 
@@ -203,6 +230,7 @@ def insert_values_to_spreadsheet_weekly():
             ws.cell(column=2 + n, row=1, value=pattern[n])
 
         list_week_year = []
+        inner_val = []
         for item in range(len(date)):
             year = int(date[item][:4])
             month = int(date[item][5:7])
@@ -215,9 +243,11 @@ def insert_values_to_spreadsheet_weekly():
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])
                 for p in range(0, 8):
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
+                inner_val.append(date[item])
             workbook.save(filename=myFilename)
+        outer_val.append(len(inner_val))
         workbook.close()
-
+    return outer_val
 
 def insert_monthly_sums_to_spreadsheet():
     sh_name = list(dict.fromkeys(create_sheetnames()[0]))
@@ -227,15 +257,15 @@ def insert_monthly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
-        paint_worksheets(ws)
+        print("sh value: ", sh)
+        paint_worksheets(ws, sh)
 
         sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
                  "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(B25:I25)"]
         for s2 in range(len(sums2)):
-            ws.cell(column=s2+2, row=25, value=sums2[s2])
+            ws.cell(column=s2 + 2, row=25, value=sums2[s2])
         ws.cell(column=10, row=24, value="Monthly Sum")
         keys(ws)
-
 
     workbook.save(filename=myFilename)
     workbook.close()
@@ -249,13 +279,14 @@ def insert_weekly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):
         ws = workbook[sh_name[sh]]
-        paint_worksheets(ws)
+        print("sh value: ", sh)
+        paint_worksheets(ws, sh)
 
         sums = ["=SUM(B1:B8)", "=SUM(C1:C8)", "=SUM(D1:D8)", "=SUM(E1:E8)", "=SUM(F1:F8)", "=SUM(G1:G8)", "=SUM(H1:H8)",
                 "=SUM(I1:I8)", "=SUM(B10:I10)"]
 
         for sum in range(len(sums)):
-            ws.cell(column=sum+2, row=10, value=sums[sum])
+            ws.cell(column=sum + 2, row=10, value=sums[sum])
         ws.cell(column=10, row=9, value="Weekly Sum")
 
         keys(ws)
