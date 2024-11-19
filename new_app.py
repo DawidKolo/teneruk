@@ -69,18 +69,15 @@ def paint_worksheets(ws, line):
     ws.column_dimensions['J'].width = 12
     ws.column_dimensions['M'].width = 45
 
-
     cell_set = ws['A1':'L26']
     for cell in cell_set:
         for c in cell:
             c.alignment = Alignment(horizontal='center')
     thick = Side(border_style="thick", color="000000")
 
-
-    for border_cell in ws.iter_cols(min_col=1, max_col=9, min_row=last_line+1, max_row=last_line+1):
+    for border_cell in ws.iter_cols(min_col=1, max_col=9, min_row=last_line + 1, max_row=last_line + 1):
         for brdc in border_cell:
             brdc.border = Border(bottom=thick)
-
 
     for bold_cell in ws.iter_cols(min_col=2, max_col=9, min_row=1, max_row=1):
         for bc in bold_cell:
@@ -99,6 +96,7 @@ def paint_worksheets(ws, line):
 
 def keys(ws):
     print("keys")
+    thick = Side(border_style="thick", color="000000")
     # keys
     keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
     for key in range(len(keys)):
@@ -109,6 +107,9 @@ def keys(ws):
               "Personal Recorded mail / Special Delivery / Signed for"]
     for k in range(len(legend)):
         ws.cell(column=13, row=k + 2, value=legend[k])
+    for cols in ws.iter_cols(min_col=12, max_col=13, min_row=9, max_row=9):
+        for h in cols:
+            h.border = Border(bottom=thick)
 
 
 # creates a sheetnames out of filenames, returns a tuple of lists of strings
@@ -233,6 +234,7 @@ def insert_values_to_spreadsheet():
         workbook.close()
     return outer_val
 
+
 # inserts weekly values to spreadsheet
 def insert_values_to_spreadsheet_weekly():
     print("insert_values_to_spreadsheet_weekly")
@@ -268,6 +270,7 @@ def insert_values_to_spreadsheet_weekly():
         outer_val.append(len(inner_val))
         workbook.close()
     return outer_val
+
 
 def insert_monthly_sums_to_spreadsheet():
     print("insert_monthly_sums_to_spreadsheet")
@@ -315,6 +318,7 @@ def insert_weekly_sums_to_spreadsheet():
     workbook.save(filename=myFilename)
     workbook.close()
 
+
 type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
     check_xls_file()
@@ -333,6 +337,3 @@ elif type_of_report == 'w':
 else:
     print('Only m or w was expected.')
     sys.exit()
-
-
-
