@@ -17,17 +17,12 @@ pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
-
-
-
-
 # checks if the xlsx file exists -> if not creates a new one
 def check_xls_file():
     print("check_xls_file")
     if not os.path.isfile(path_out + month_xlsx_name):
         excel = xlsxwriter.Workbook(path_out + month_xlsx_name)
         excel.close()
-
 
 
 # checks if the xlsx file exists -> if not creates a new one
@@ -325,18 +320,14 @@ def insert_weekly_sums_to_spreadsheet():
 # starts the program
 type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
-    if not os.path.isfile(myFilename_month):
-        excel = xlsxwriter.Workbook(myFilename_month)
-        excel.close()
+    check_xls_file()
     search_for_p()
     write_sheetname_to_wb()
     insert_values_to_spreadsheet()
     insert_monthly_sums_to_spreadsheet()
 
 elif type_of_report == 'w':
-    if not os.path.isfile(myFilename_week):
-        excel = xlsxwriter.Workbook(myFilename_week)
-        excel.close()
+    week_check_xls_file()
     search_for_p()
     write_weekly_sheetname_to_wb()
     insert_values_to_spreadsheet_weekly()
