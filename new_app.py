@@ -15,9 +15,10 @@ week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
 pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 myFilename_month = path_out + month_xlsx_name
-wb = load_workbook(filename=myFilename_month)
 myFilename_week = path_out + week_xlsx_name
-wb_week = load_workbook(filename=myFilename_week)
+
+
+
 
 
 # checks if the xlsx file exists -> if not creates a new one
@@ -26,6 +27,7 @@ def check_xls_file():
     if not os.path.isfile(path_out + month_xlsx_name):
         excel = xlsxwriter.Workbook(path_out + month_xlsx_name)
         excel.close()
+
 
 
 # checks if the xlsx file exists -> if not creates a new one
@@ -183,6 +185,7 @@ def search_for_p():
 # writes sheetname to the workbook
 def write_sheetname_to_wb():
     print("write_sheetname_to_wb")
+    wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique item from a list
     for c in range(len(sheetname)):
 
@@ -191,24 +194,26 @@ def write_sheetname_to_wb():
             wb.create_sheet(sheetname[c])
 
         wb.save(filename=myFilename_month)
-        wb.close()
+    wb.close()
 
 
 # writes weekly related sheetnames to workbook
 def write_weekly_sheetname_to_wb():
     print("write_weekly_sheetname_to_wb")
+    wb_week = load_workbook(filename=myFilename_week)
     sheetname = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique item from a list
     for c in range(len(sheetname)):
         if not sheetname[c] in wb_week.sheetnames:  # creates sheetnames in the workbook if they don't exist
             wb_week.create_sheet(sheetname[c])
 
         wb_week.save(filename=myFilename_week)
-        wb_week.close()
+    wb_week.close()
 
 
 # Writes the P values to the spreadsheets and returns list of number of entries per spreadsheet
 def insert_values_to_spreadsheet():
     print("insert_values_to_spreadsheet")
+    wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique item from a list
     date = create_sheetnames()[1]
 
@@ -233,13 +238,14 @@ def insert_values_to_spreadsheet():
         wb.save(filename=myFilename_month)
 
         outer_val.append(len(inner_val))
-        wb.close()
+    wb.close()
     return outer_val
 
 
 # inserts weekly values to spreadsheet
 def insert_values_to_spreadsheet_weekly():
     print("insert_values_to_spreadsheet_weekly")
+    wb_week = load_workbook(filename=myFilename_week)
     sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique items from a list
     date = create_sheetnames_weekly()[1]  # gets list of sheetnames [week-year]
     p_table = search_for_p()  # gets values of "P"s
@@ -274,6 +280,7 @@ def insert_values_to_spreadsheet_weekly():
 # writes a row of sums to relevant columns
 def insert_monthly_sums_to_spreadsheet():
     print("insert_monthly_sums_to_spreadsheet")
+    wb = load_workbook(filename=myFilename_month)
     sh_name = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
 
     for sh in range(len(sh_name)):  # iterates through sheetnames
@@ -295,6 +302,7 @@ def insert_monthly_sums_to_spreadsheet():
 
 def insert_weekly_sums_to_spreadsheet():
     print("insert_weekly_sums_to_spreadsheet")
+    wb_week = load_workbook(filename=myFilename_week)
     sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique items from a list
 
     for sh in range(len(sh_name)):  # iterates through sheetnames
@@ -317,14 +325,18 @@ def insert_weekly_sums_to_spreadsheet():
 # starts the program
 type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
-    check_xls_file()
+    if not os.path.isfile(myFilename_month):
+        excel = xlsxwriter.Workbook(myFilename_month)
+        excel.close()
     search_for_p()
     write_sheetname_to_wb()
     insert_values_to_spreadsheet()
     insert_monthly_sums_to_spreadsheet()
 
 elif type_of_report == 'w':
-    week_check_xls_file()
+    if not os.path.isfile(myFilename_week):
+        excel = xlsxwriter.Workbook(myFilename_week)
+        excel.close()
     search_for_p()
     write_weekly_sheetname_to_wb()
     insert_values_to_spreadsheet_weekly()
