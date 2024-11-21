@@ -17,6 +17,7 @@ pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
+
 # checks if the xlsx file exists -> if not creates a new one
 def check_xls_file():
     print("check_xls_file")
@@ -98,7 +99,7 @@ def paint_worksheets(ws, line):
             cell.font = Font(bold=True)
 
 
-# writes keys to the spreadsheet and paints thick line at the last row
+# writes keys to the spreadsheet and paints a thick line at the last row
 def keys(ws):
     print("keys")
     thick = Side(border_style="thick", color="000000")
@@ -117,7 +118,7 @@ def keys(ws):
             h.border = Border(bottom=thick)
 
 
-# creates a sheetnames out of filenames, returns a tuple of lists of strings
+# creates sheetnames out of filenames, returns a tuple of lists of strings
 def create_sheetnames():
     print("create_sheetnames")
     txt_files = collect_txt_filenames()  # takes list of txt filenames
@@ -136,7 +137,7 @@ def create_sheetnames():
     return sheet_names, timestamp
 
 
-# creates a sheetnames out of filenames, returns a tuple of lists of strings (for weekly path)
+# creates sheetnames out of filenames, returns a tuple of lists of strings (for weekly path)
 def create_sheetnames_weekly():
     print("create_sheetnames_weekly")
     week = get_week_of_year()  # takes a list of week numbers of a year
@@ -188,7 +189,7 @@ def write_sheetname_to_wb():
 
             wb.create_sheet(sheetname[c])
 
-        wb.save(filename=myFilename_month)
+    wb.save(filename=myFilename_month)
     wb.close()
 
 
@@ -201,7 +202,7 @@ def write_weekly_sheetname_to_wb():
         if not sheetname[c] in wb_week.sheetnames:  # creates sheetnames in the workbook if they don't exist
             wb_week.create_sheet(sheetname[c])
 
-        wb_week.save(filename=myFilename_week)
+    wb_week.save(filename=myFilename_week)
     wb_week.close()
 
 
@@ -230,9 +231,11 @@ def insert_values_to_spreadsheet():
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
             inner_val.append(date[item])  # increases the length of inner_val list
 
-        wb.save(filename=myFilename_month)
 
         outer_val.append(len(inner_val))
+    wb.save(filename=myFilename_month)
+
+
     wb.close()
     return outer_val
 
@@ -265,9 +268,12 @@ def insert_values_to_spreadsheet_weekly():
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
 
                 inner_val.append(date[item])  # adds values to the list
-            wb_week.save(filename=myFilename_week)
+
 
         outer_val.append(len(inner_val))  # adds values to the list
+        wb_week.save(filename=myFilename_week)
+
+
         wb_week.close()
     return outer_val
 
