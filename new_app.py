@@ -231,10 +231,8 @@ def insert_values_to_spreadsheet():
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
             inner_val.append(date[item])  # increases the length of inner_val list
 
-
         outer_val.append(len(inner_val))
     wb.save(filename=myFilename_month)
-
 
     wb.close()
     return outer_val
@@ -269,10 +267,8 @@ def insert_values_to_spreadsheet_weekly():
 
                 inner_val.append(date[item])  # adds values to the list
 
-
         outer_val.append(len(inner_val))  # adds values to the list
         wb_week.save(filename=myFilename_week)
-
 
         wb_week.close()
     return outer_val
