@@ -6,6 +6,7 @@ import sys
 import xlsxwriter
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
+import logging
 
 # variables
 path = "C:\\test\\000"
@@ -182,7 +183,7 @@ def search_for_p():
 def write_sheetname_to_wb():
     print("write_sheetname_to_wb")
     wb = load_workbook(filename=myFilename_month)
-    sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique item from a list
+    sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     for c in range(len(sheetname)):
 
         if not sheetname[c] in wb.sheetnames:  # creates sheetnames in the workbook if they don't exist
@@ -210,7 +211,7 @@ def write_weekly_sheetname_to_wb():
 def insert_values_to_spreadsheet():
     print("insert_values_to_spreadsheet")
     wb = load_workbook(filename=myFilename_month)
-    sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique item from a list
+    sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     date = create_sheetnames()[1]
 
     p_table = search_for_p()
@@ -229,12 +230,13 @@ def insert_values_to_spreadsheet():
 
                 for p in range(0, 8):  # writes values of "P"s to the spreadsheet
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
-            inner_val.append(date[item])  # increases the length of inner_val list
+                inner_val.append(date[item])  # increases the length of inner_val list
 
         outer_val.append(len(inner_val))
     wb.save(filename=myFilename_month)
 
     wb.close()
+    print(outer_val)
     return outer_val
 
 
@@ -317,6 +319,7 @@ def insert_weekly_sums_to_spreadsheet():
 
     wb_week.save(filename=myFilename_week)
     wb_week.close()
+
 
 
 # starts the program
