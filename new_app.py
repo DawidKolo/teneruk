@@ -14,7 +14,7 @@ path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
-pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+pattern = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
@@ -105,13 +105,13 @@ def keys(ws):
     print("keys")
     thick = Side(border_style="thick", color="000000")
     # keys
-    keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+    keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
     for key in range(len(keys)):
         ws.cell(column=12, row=key + 1, value=keys[key])
 
     legend = ["Returned undeliverable mail", "Returned mail for processing", "Complaints", "WEB Loyalty mail",
               "Claims packages", "Keys/ Returned Key", "Tenerity Recorded mail / Special Delivery / Signed for",
-              "Personal Recorded mail / Special Delivery / Signed for"]
+              "Personal Recorded mail / Special Delivery / Signed for", "Precisely - goneaway"]
     for k in range(len(legend)):
         ws.cell(column=13, row=k + 2, value=legend[k])
     for cols in ws.iter_cols(min_col=12, max_col=13, min_row=9, max_row=9):
@@ -220,7 +220,7 @@ def insert_values_to_spreadsheet():
     for w in range(len(sheetname)):  # iterates through the list and get list of sheetnames
         ws = wb[sheetname[w]]
 
-        for n in range(0, 8):  # writes header of "P"s into the spreadsheet
+        for n in range(0, len(pattern)):  # writes header of "P"s into the spreadsheet
             ws.cell(column=2 + n, row=1, value=pattern[n])
 
         inner_val = []  # the list of dates
@@ -228,7 +228,7 @@ def insert_values_to_spreadsheet():
             if date[item][0:7] == sheetname[w]:  # condition: to write correct values to the right spreadsheet
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])  # writes values to cells
 
-                for p in range(0, 8):  # writes values of "P"s to the spreadsheet
+                for p in range(0, len(pattern)):  # writes values of "P"s to the spreadsheet
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
                 inner_val.append(date[item])  # increases the length of inner_val list
 
@@ -253,7 +253,7 @@ def insert_values_to_spreadsheet_weekly():
     for w in range(len(sh_name)):  # iterates through the list and get list of sheetnames
         ws = wb_week[sh_name[w]]
 
-        for n in range(0, 8):  # writes header of "P"s into the spreadsheet
+        for n in range(0, len(pattern)):  # writes header of "P"s into the spreadsheet
             ws.cell(column=2 + n, row=1, value=pattern[n])
 
         list_week_year = []
@@ -264,7 +264,7 @@ def insert_values_to_spreadsheet_weekly():
 
             if list_week_year[item] == sh_name[w]:  # checks if a spreadsheet exists in the workbook
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])  # writes dates to the spreadsheet
-                for p in range(0, 8):  # writes values of "P"s to spreadsheet
+                for p in range(0, len(pattern)):  # writes values of "P"s to spreadsheet
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
 
                 inner_val.append(date[item])  # adds values to the list
