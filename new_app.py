@@ -21,7 +21,7 @@ myFilename_week = path_out + week_xlsx_name
 
 # checks if the xlsx file exists -> if not creates a new one
 def check_xls_file():
-    print("check_xls_file")
+#    print("check_xls_file")
     if not os.path.isfile(path_out + month_xlsx_name):
         excel = xlsxwriter.Workbook(path_out + month_xlsx_name)
         excel.close()
@@ -29,7 +29,7 @@ def check_xls_file():
 
 # checks if the xlsx file exists -> if not creates a new one
 def week_check_xls_file():
-    print("week_check_xls_file")
+#    print("week_check_xls_file")
     if not os.path.isfile(path_out + week_xlsx_name):
         excel = xlsxwriter.Workbook(path_out + week_xlsx_name)
         excel.close()
@@ -37,7 +37,7 @@ def week_check_xls_file():
 
 # gets filenames od txt files and adds them to the list, returns the list of strings
 def collect_txt_filenames():
-    print("collect_txt_filenames")
+#    print("collect_txt_filenames")
     txt_files = []  # creates a list
     for file in filelist:  # iterates through files in folder and adds their filenames ending with txt, to the list
         if file.endswith(".txt"):
@@ -47,7 +47,7 @@ def collect_txt_filenames():
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
 def get_week_of_year():
-    print("get_week_of_year")
+#    print("get_week_of_year")
     date_for_week = create_sheetnames()[1]  # takes timestamps
     week_of_year = []  # list to store week of the year
     for i in range(len(date_for_week)):  # iterates through timestamps and assigns values to variables
@@ -62,7 +62,7 @@ def get_week_of_year():
 
 # puts styles to the spreadsheet. Fonts, background, lines
 def paint_worksheets(ws, line):
-    print("paint_worksheets")
+#    print("paint_worksheets")
 
     if type_of_report == "w":  # checks what type of report needs to be generated
         last_line = insert_values_to_spreadsheet_weekly()[
@@ -103,7 +103,7 @@ def paint_worksheets(ws, line):
 
 # writes keys to the spreadsheet and paints a thick line at the last row
 def keys(ws):
-    print("keys")
+#    print("keys")
     thick = Side(border_style="thick", color="000000")
     # keys
     keys = ["Keys", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
@@ -122,7 +122,7 @@ def keys(ws):
 
 # creates sheetnames out of filenames, returns a tuple of lists of strings
 def create_sheetnames():
-    print("create_sheetnames")
+#    print("create_sheetnames")
     txt_files = collect_txt_filenames()  # takes list of txt filenames
     sheet_names = []
     timestamp = []
@@ -141,7 +141,7 @@ def create_sheetnames():
 
 # creates sheetnames out of filenames, returns a tuple of lists of strings (for weekly path)
 def create_sheetnames_weekly():
-    print("create_sheetnames_weekly")
+#    print("create_sheetnames_weekly")
     week = get_week_of_year()  # takes a list of week numbers of a year
     txt_files = collect_txt_filenames()  # takes list of txt filenames
     weekly_sheetnames = []
@@ -162,7 +162,7 @@ def create_sheetnames_weekly():
 
 # searches for P1,P2 etc. from the pattern list in txt files, returns a list
 def search_for_p():
-    print("search_for_p")
+#    print("search_for_p")
     txt_files = collect_txt_filenames()
     temp_list = []
     for txt_file in txt_files:  # opens txt files
@@ -182,7 +182,7 @@ def search_for_p():
 
 # writes sheetname to the workbook
 def write_sheetname_to_wb():
-    print("write_sheetname_to_wb")
+#    print("write_sheetname_to_wb")
     wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     for c in range(len(sheetname)):
@@ -197,7 +197,7 @@ def write_sheetname_to_wb():
 
 # writes weekly related sheetnames to workbook
 def write_weekly_sheetname_to_wb():
-    print("write_weekly_sheetname_to_wb")
+#    print("write_weekly_sheetname_to_wb")
     wb_week = load_workbook(filename=myFilename_week)
     sheetname = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique item from a list
     for c in range(len(sheetname)):
@@ -210,7 +210,7 @@ def write_weekly_sheetname_to_wb():
 
 # Writes the P values to the spreadsheets and returns list of number of entries per spreadsheet
 def insert_values_to_spreadsheet():
-    print("insert_values_to_spreadsheet")
+#    print("insert_values_to_spreadsheet")
     wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     date = create_sheetnames()[1]
@@ -237,13 +237,13 @@ def insert_values_to_spreadsheet():
     wb.save(filename=myFilename_month)
 
     wb.close()
-    print(outer_val)
+#    print(outer_val)
     return outer_val
 
 
 # inserts weekly values to spreadsheet
 def insert_values_to_spreadsheet_weekly():
-    print("insert_values_to_spreadsheet_weekly")
+#    print("insert_values_to_spreadsheet_weekly")
     wb_week = load_workbook(filename=myFilename_week)
     sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique items from a list
     date = create_sheetnames_weekly()[1]  # gets list of sheetnames [week-year]
@@ -279,7 +279,7 @@ def insert_values_to_spreadsheet_weekly():
 
 # writes a row of sums to relevant columns
 def insert_monthly_sums_to_spreadsheet():
-    print("insert_monthly_sums_to_spreadsheet")
+#    print("insert_monthly_sums_to_spreadsheet")
     wb = load_workbook(filename=myFilename_month)
     sh_name = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
 
@@ -301,7 +301,7 @@ def insert_monthly_sums_to_spreadsheet():
 
 
 def insert_weekly_sums_to_spreadsheet():
-    print("insert_weekly_sums_to_spreadsheet")
+#    print("insert_weekly_sums_to_spreadsheet")
     wb_week = load_workbook(filename=myFilename_week)
     sh_name = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique items from a list
 
