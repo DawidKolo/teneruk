@@ -73,6 +73,7 @@ def paint_worksheets(ws, line):
     ws.column_dimensions['A'].width = 10  # setting column dimension for given columns
     ws.column_dimensions['J'].width = 12
     ws.column_dimensions['M'].width = 45
+    ws.column_dimensions['K'].width = 11
 
     cell_set = ws['A1':'L26']  # sets values in the center of the given cell
     for cell in cell_set:
@@ -81,16 +82,16 @@ def paint_worksheets(ws, line):
 
     thick = Side(border_style="thick", color="000000")  # sets a style for border
 
-    for border_cell in ws.iter_cols(min_col=1, max_col=9, min_row=last_line + 1, max_row=last_line + 1):
+    for border_cell in ws.iter_cols(min_col=1, max_col=10, min_row=last_line + 1, max_row=last_line + 1):
         for brdc in border_cell:  # puts a thick line at the bottom of values
             brdc.border = Border(bottom=thick)
 
-    for bold_cell in ws.iter_cols(min_col=2, max_col=9, min_row=1, max_row=1):
+    for bold_cell in ws.iter_cols(min_col=2, max_col=10, min_row=1, max_row=1):
         for bc in bold_cell:  # paints a background for given cells and
             bc.font = Font(bold=True)  # changes font to bold
             bc.fill = PatternFill(start_color="6600CC", end_color="6600CC", fill_type="solid")
 
-    for rows in ws.iter_cols(min_row=1, max_row=1, min_col=12, max_col=12):
+    for rows in ws.iter_cols(min_row=1, max_row=1, min_col=12, max_col=13):
         for cell in rows:  # paints a background for given cells and
             cell.font = Font(bold=True)  # changes font to bold
             cell.fill = PatternFill(start_color="6600CC", end_color="6600CC", fill_type="solid")
@@ -114,7 +115,7 @@ def keys(ws):
               "Personal Recorded mail / Special Delivery / Signed for", "Precisely - goneaway"]
     for k in range(len(legend)):
         ws.cell(column=13, row=k + 2, value=legend[k])
-    for cols in ws.iter_cols(min_col=12, max_col=13, min_row=9, max_row=9):
+    for cols in ws.iter_cols(min_col=12, max_col=13, min_row=10, max_row=10):
         for h in cols:
             h.border = Border(bottom=thick)
 
@@ -288,10 +289,10 @@ def insert_monthly_sums_to_spreadsheet():
         paint_worksheets(ws, sh)  # styles the spreadsheets
 
         sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
-                 "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(B25:I25)"]
+                 "=SUM(H1:H24)", "=SUM(I1:I24)", "=SUM(J1:J24)", "=SUM(B25:J25)"]
         for s2 in range(len(sums2)):  # inserts sums of columns to the spreadsheet
             ws.cell(column=s2 + 2, row=25, value=sums2[s2])
-        ws.cell(column=10, row=24, value="Monthly Sum")
+        ws.cell(column=11, row=24, value="Monthly Sum")
 
         keys(ws)  # inserts keys
 
@@ -309,11 +310,11 @@ def insert_weekly_sums_to_spreadsheet():
         paint_worksheets(ws, sh)  # styles the spreadsheets
 
         sums = ["=SUM(B1:B8)", "=SUM(C1:C8)", "=SUM(D1:D8)", "=SUM(E1:E8)", "=SUM(F1:F8)", "=SUM(G1:G8)", "=SUM(H1:H8)",
-                "=SUM(I1:I8)", "=SUM(B10:I10)"]
+                "=SUM(I1:I8)", "=SUM(J1:J8)", "=SUM(B10:J10)"]
 
         for sum in range(len(sums)):  # inserts sums of columns to the spreadsheet
             ws.cell(column=sum + 2, row=10, value=sums[sum])
-        ws.cell(column=10, row=9, value="Weekly Sum")
+        ws.cell(column=11, row=9, value="Weekly Sum")
 
         keys(ws)  # inserts keys
 
