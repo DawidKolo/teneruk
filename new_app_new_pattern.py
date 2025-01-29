@@ -55,7 +55,7 @@ def collect_txt_filenames():
 def undef_strings():
     pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
     pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
-
+    time_stmp = create_sheetnames()[1]
     all_files = collect_txt_filenames()
     test = []
     test_n = []
@@ -71,7 +71,20 @@ def undef_strings():
     for und_expr in test_n:
         if not re.match(pattern, und_expr) and not re.match(pattern2, und_expr):
             filtered.append(und_expr)
+    stmp_list = []
+    for stmp in time_stmp:
+        stmp_list.append(stmp[:7])
+    stmp_list = list(dict.fromkeys(stmp_list))
 
+    if len(filtered) > 0:
+        print("There are additional unexpected entries! Check unexpected_files.txt file for details.")
+
+        if not os.path.isfile(path_out + "\\" + "unexpected_files.txt"):
+            with open(path_out + "\\" + "unexpected_files.txt", "w") as txt:
+                txt.write("\n".join(stmp_list) + " " + "\n".join(filtered))
+        else:
+            with open(path_out + "\\" + "unexpected_files.txt", "w") as txt:
+                txt.write("\n".join(stmp_list) + " " + "\n".join(filtered))
 
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
@@ -190,8 +203,6 @@ def create_sheetnames_weekly():
 
 # searches for P1,P2 etc. from the pattern list in txt files, returns a list
 def search_for_p():
-
-
     #    print("search_for_p")
     txt_files = collect_txt_filenames()
     temp_list = []
