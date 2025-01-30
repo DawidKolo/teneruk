@@ -13,7 +13,7 @@ path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
-pattern = [r"P1" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+patterns = [r"P1" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
            r"P2" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
            r"P3" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
            r"P4" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
@@ -52,31 +52,34 @@ def collect_txt_filenames():
     return txt_files
 
 
-def undef_strings():
+def undef_strings(): # this function writes unexpected values to a file
+    # Patterns to exclude
     pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
     pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
-    time_stmp = create_sheetnames()[1]
-    all_files = collect_txt_filenames()
+
+
+    time_stmp = create_sheetnames()[1] # gets timestamps
+    all_files = collect_txt_filenames() # gets list od files
+
     test = []
-    test_n = []
-    for fle in all_files:
+
+    for fle in all_files:   # looping through the files and gets all the content, removes new line chars
         j = open(path + "\\" + fle, "r")
         for line in j:
-            test.append(line)
+            top = line.replace("\n", "")
+            test.append(top)
 
-    for i in test:
-        top = i.replace("\n", "")
-        test_n.append(top)
     filtered = []
-    for und_expr in test_n:
+    for und_expr in test: # stores unexpected entries
         if not re.match(pattern, und_expr) and not re.match(pattern2, und_expr):
             filtered.append(und_expr)
+
     stmp_list = []
-    for stmp in time_stmp:
+    for stmp in time_stmp: # creates unique timestamps [YYYY-MM]
         stmp_list.append(stmp[:7])
     stmp_list = list(dict.fromkeys(stmp_list))
 
-    if len(filtered) > 0:
+    if len(filtered) > 0: # Prints statement and create/ update a txt file when unexpected entries are found
         print("There are additional unexpected entries! Check unexpected_files.txt file for details.")
 
         if not os.path.isfile(path_out + "\\" + "unexpected_files.txt"):
@@ -213,7 +216,7 @@ def search_for_p():
 
         p_table = []
 
-        for p in pattern:  # searches for P values in the txt files and writes them to the list
+        for p in patterns:  # searches for P values in the txt files and writes them to the list
             match_p = re.findall(p, files)
             p_table.append(len(match_p))
         temp_list.append(p_table)
@@ -271,7 +274,7 @@ def insert_values_to_spreadsheet():
             if date[item][0:7] == sheetname[w]:  # condition: to write correct values to the right spreadsheet
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])  # writes values to cells
 
-                for p in range(len(pattern)):  # writes values of "P"s to the spreadsheet
+                for p in range(len(patterns)):  # writes values of "P"s to the spreadsheet
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
                 inner_val.append(date[item])  # increases the length of inner_val list
 
@@ -307,7 +310,7 @@ def insert_values_to_spreadsheet_weekly():
 
             if list_week_year[item] == sh_name[w]:  # checks if a spreadsheet exists in the workbook
                 ws.cell(column=1, row=ws.max_row + 1, value=date[item])  # writes dates to the spreadsheet
-                for p in range(0, len(pattern)):  # writes values of "P"s to spreadsheet
+                for p in range(0, len(patterns)):  # writes values of "P"s to spreadsheet
                     ws.cell(column=2 + p, row=ws.max_row, value=p_table[item][p])
 
                 inner_val.append(date[item])  # adds values to the list
@@ -372,6 +375,7 @@ if type_of_report == 'm':
     write_sheetname_to_wb()
     insert_values_to_spreadsheet()
     insert_monthly_sums_to_spreadsheet()
+    undef_strings()
 
 elif type_of_report == 'w':
     week_check_xls_file()
