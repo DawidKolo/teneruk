@@ -8,7 +8,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 
 # variables
-path = "C:\\test\\000"
+path = "C:\\test\\002"
 path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
@@ -61,33 +61,38 @@ def undef_strings(): # this function writes unexpected values to a file
     time_stmp = create_sheetnames()[1] # gets timestamps
     all_files = collect_txt_filenames() # gets list od files
 
-    test = []
+    if type_of_report == "w":
+        un_exp_file = "weekly_unexpected_files.txt"
+    elif type_of_report == "m":
+        un_exp_file = "monthly_unexpected_files.txt"
 
+    test = []
     for fle in all_files:   # looping through the files and gets all the content, removes new line chars
         j = open(path + "\\" + fle, "r")
         for line in j:
             top = line.replace("\n", "")
-            test.append(top)
+            test.append((fle[20:28],top))
 
     filtered = []
     for und_expr in test: # stores unexpected entries
-        if not re.match(pattern, und_expr) and not re.match(pattern2, und_expr):
+        if not re.match(pattern, und_expr[1]) and not re.match(pattern2, und_expr[1]):
             filtered.append(und_expr)
-
-    stmp_list = []
-    for stmp in time_stmp: # creates unique timestamps [YYYY-MM]
-        stmp_list.append(stmp[:7])
-    stmp_list = list(dict.fromkeys(stmp_list))
 
     if len(filtered) > 0: # Prints statement and create/ update a txt file when unexpected entries are found
         print("There are additional unexpected entries! Check unexpected_files.txt file for details.")
 
-        if not os.path.isfile(path_out + "\\" + "unexpected_files.txt"):
-            with open(path_out + "\\" + "unexpected_files.txt", "w") as txt:
-                txt.write("\n".join(stmp_list) + " " + "\n".join(filtered))
+        if not os.path.isfile(path_out + "\\" + un_exp_file):
+            y = open(path_out + "\\" + un_exp_file, "w")
+            for t in filtered:
+                line = ' '.join(str(x) for x in t)
+                y.write(line + "\n")
+            y.close()
         else:
-            with open(path_out + "\\" + "unexpected_files.txt", "w") as txt:
-                txt.write("\n".join(stmp_list) + " " + "\n".join(filtered))
+            y = open(path_out + "\\" + un_exp_file, "w")
+            for t in filtered:
+                line = ' '.join(str(x) for x in t)
+                y.write(line + "\n")
+            y.close()
 
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
