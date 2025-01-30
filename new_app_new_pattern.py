@@ -8,20 +8,20 @@ from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 
 # variables
-path = "C:\\test\\002"
+path = "C:\\test\\000"
 path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
 patterns = [r"P1" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P2" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P3" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P4" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P5" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P6" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P7" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"P8" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-           r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"]
+            r"P2" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P3" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P4" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P5" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P6" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P7" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"P8" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
+            r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"]
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
@@ -52,14 +52,12 @@ def collect_txt_filenames():
     return txt_files
 
 
-def undef_strings(): # this function writes unexpected values to a file
+def undef_strings():  # this function writes unexpected values to a file
     # Patterns to exclude
     pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
     pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
 
-
-    time_stmp = create_sheetnames()[1] # gets timestamps
-    all_files = collect_txt_filenames() # gets list od files
+    all_files = collect_txt_filenames()  # gets list od files
 
     if type_of_report == "w":
         un_exp_file = "weekly_unexpected_files.txt"
@@ -67,19 +65,19 @@ def undef_strings(): # this function writes unexpected values to a file
         un_exp_file = "monthly_unexpected_files.txt"
 
     test = []
-    for fle in all_files:   # looping through the files and gets all the content, removes new line chars
+    for fle in all_files:  # looping through the files and gets all the content, removes new line chars
         j = open(path + "\\" + fle, "r")
         for line in j:
             top = line.replace("\n", "")
-            test.append((fle[20:28],top))
+            test.append((fle[20:28], top))
 
     filtered = []
-    for und_expr in test: # stores unexpected entries
+    for und_expr in test:  # stores unexpected entries
         if not re.match(pattern, und_expr[1]) and not re.match(pattern2, und_expr[1]):
             filtered.append(und_expr)
 
-    if len(filtered) > 0: # Prints statement and create/ update a txt file when unexpected entries are found
-        print("There are additional unexpected entries! Check unexpected_files.txt file for details.")
+    if len(filtered) > 0 and type_of_report == "w":  # Prints statement and create/ update a txt file when unexpected entries are found
+        print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
 
         if not os.path.isfile(path_out + "\\" + un_exp_file):
             y = open(path_out + "\\" + un_exp_file, "w")
@@ -93,7 +91,21 @@ def undef_strings(): # this function writes unexpected values to a file
                 line = ' '.join(str(x) for x in t)
                 y.write(line + "\n")
             y.close()
+    else:
+        print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
 
+        if not os.path.isfile(path_out + "\\" + un_exp_file):
+            y = open(path_out + "\\" + un_exp_file, "w")
+            for t in filtered:
+                line = ' '.join(str(x) for x in t)
+                y.write(line + "\n")
+            y.close()
+        else:
+            y = open(path_out + "\\" + un_exp_file, "w")
+            for t in filtered:
+                line = ' '.join(str(x) for x in t)
+                y.write(line + "\n")
+            y.close()
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
 def get_week_of_year():
