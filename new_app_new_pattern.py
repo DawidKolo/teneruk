@@ -2,7 +2,6 @@ import re
 import os
 import datetime
 import sys
-
 import xlsxwriter
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
@@ -51,6 +50,33 @@ def collect_txt_filenames():
             txt_files.append(file)
     return txt_files
 
+def week_or_month_of_year(date, var):
+
+    year = int(date[:4])
+    month = int(date[5:6])
+    day = int(date[6:9])
+    if var == "w":
+        week = datetime.date(year, month, day).isocalendar()[1]  # calculates the week of the year for a timestamp
+        week_in_year = (str(week) + "-" + str(year))  # adds week-year strings to the variable
+        return week_in_year
+    elif var == "m":
+        month_in_year = month
+        return month_in_year
+
+
+def write_to_file(name, list):
+    if not os.path.isfile(path_out + "\\" + name):
+        y = open(path_out + "\\" + name, "w")
+        for t in list:
+            line = ' '.join(str(x) for x in t)
+            y.write(line + "\n")
+        y.close()
+    else:
+        y = open(path_out + "\\" + name, "w")
+        for t in list:
+            line = ' '.join(str(x) for x in t)
+            y.write(line + "\n")
+        y.close()
 
 def undef_strings():  # this function writes unexpected values to a file
     # Patterns to exclude
@@ -58,11 +84,6 @@ def undef_strings():  # this function writes unexpected values to a file
     pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
 
     all_files = collect_txt_filenames()  # gets list od files
-
-    if type_of_report == "w":
-        un_exp_file = "weekly_unexpected_files.txt"
-    elif type_of_report == "m":
-        un_exp_file = "monthly_unexpected_files.txt"
 
     test = []
     for fle in all_files:  # looping through the files and gets all the content, removes new line chars
@@ -76,36 +97,29 @@ def undef_strings():  # this function writes unexpected values to a file
         if not re.match(pattern, und_expr[1]) and not re.match(pattern2, und_expr[1]):
             filtered.append(und_expr)
 
-    if len(filtered) > 0 and type_of_report == "w":  # Prints statement and create/ update a txt file when unexpected entries are found
-        print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
 
-        if not os.path.isfile(path_out + "\\" + un_exp_file):
-            y = open(path_out + "\\" + un_exp_file, "w")
-            for t in filtered:
-                line = ' '.join(str(x) for x in t)
-                y.write(line + "\n")
-            y.close()
-        else:
-            y = open(path_out + "\\" + un_exp_file, "w")
-            for t in filtered:
-                line = ' '.join(str(x) for x in t)
-                y.write(line + "\n")
-            y.close()
-    else:
-        print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
+    if type_of_report == "m":
+        if len(filtered) > 0:
+            print(f"There are additional unexpected entries! Check files for details: ")
+        for e in filtered:
+            filename_month = week_or_month_of_year(e[0], type_of_report)
+            un_exp_file = f"unexpected_files_{filename_month}.txt"
+            print(f"{un_exp_file}")
+            write_to_file(un_exp_file, filtered)
 
-        if not os.path.isfile(path_out + "\\" + un_exp_file):
-            y = open(path_out + "\\" + un_exp_file, "w")
-            for t in filtered:
-                line = ' '.join(str(x) for x in t)
-                y.write(line + "\n")
-            y.close()
-        else:
-            y = open(path_out + "\\" + un_exp_file, "w")
-            for t in filtered:
-                line = ' '.join(str(x) for x in t)
-                y.write(line + "\n")
-            y.close()
+
+    elif type_of_report == "w":
+        for e in filtered:
+            filename_week = week_or_month_of_year(e[0], type_of_report)
+            un_exp_file = f"unexpected_files_{filename_week}.txt"
+
+        if len(filtered) > 0 and type_of_report == "w":  # Prints statement and create/ update a txt file when unexpected entries are found
+            print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
+            write_to_file(un_exp_file, filtered)
+
+
+
+
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
 def get_week_of_year():
