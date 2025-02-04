@@ -59,23 +59,22 @@ def week_or_month_of_year(date, var):
         week = datetime.date(year, month, day).isocalendar()[1]  # calculates the week of the year for a timestamp
         week_in_year = (str(week) + "-" + str(year))  # adds week-year strings to the variable
         return week_in_year
-    elif var == "m":
-        month_in_year = month
-        return month_in_year
 
 
 def write_to_file(name, list):
     if not os.path.isfile(path_out + "\\" + name):
         y = open(path_out + "\\" + name, "w")
         for t in list:
-            line = ' '.join(str(x) for x in t)
-            y.write(line + "\n")
+            if int(name[7:9]) == int(t[0][4:6]):
+                line = ''.join(str(t))
+                y.write(line + "\n")
         y.close()
     else:
         y = open(path_out + "\\" + name, "w")
         for t in list:
-            line = ' '.join(str(x) for x in t)
-            y.write(line + "\n")
+            if int(name[7:9]) == int(t[0][4:6]):
+                line = ''.join(str(t))
+                y.write(line + "\n")
         y.close()
 
 def undef_strings():  # this function writes unexpected values to a file
@@ -98,20 +97,29 @@ def undef_strings():  # this function writes unexpected values to a file
             filtered.append(und_expr)
 
 
+    unexpected_txt_filenames_stage_1 = []
+    for r in range(len(filtered)):
+        unexpected_txt_filenames_stage_1.append(filtered[r][0][0:6])
+    unexpected_txt_filenames_stage_1 = list(dict.fromkeys(unexpected_txt_filenames_stage_1))
+
+
+    unexpected_txt_filenames_stage_2 = []
+    for q in unexpected_txt_filenames_stage_1:
+        unexpected_txt_filenames_stage_2.append("uf_" + q[0:6] + ".txt")
+
     if type_of_report == "m":
         if len(filtered) > 0:
-            print(f"There are additional unexpected entries! Check files for details: ")
-        for e in filtered:
-            filename_month = week_or_month_of_year(e[0], type_of_report)
-            un_exp_file = f"unexpected_files_{filename_month}.txt"
-            print(f"{un_exp_file}")
-            write_to_file(un_exp_file, filtered)
-
+            for e in range(len(unexpected_txt_filenames_stage_2)):
+                un_exp_file = unexpected_txt_filenames_stage_2[e]
+                write_to_file(un_exp_file, filtered)
+        print("There are additional unexpected entries! Check files for details: ", end=" ")
+        for c in unexpected_txt_filenames_stage_2:
+            print(c, end=" ")
 
     elif type_of_report == "w":
         for e in filtered:
             filename_week = week_or_month_of_year(e[0], type_of_report)
-            un_exp_file = f"unexpected_files_{filename_week}.txt"
+            un_exp_file = f"uf_{filename_week}.txt"
 
         if len(filtered) > 0 and type_of_report == "w":  # Prints statement and create/ update a txt file when unexpected entries are found
             print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
