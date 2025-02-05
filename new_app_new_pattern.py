@@ -12,15 +12,10 @@ path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
-patterns = [r"P1" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P2" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P3" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P4" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P5" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P6" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P7" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"P8" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf",
-            r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"]
+patterns = [r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"]
+for p in range(1,9):
+    patterns.append(fr"P{p}" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf")
+
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
@@ -115,7 +110,7 @@ def undef_strings():  # this function writes unexpected values to a file
     for und_expr in test:  # stores unexpected entries
         if not re.match(pattern, und_expr[2]) and not re.match(pattern2, und_expr[2]):
             filtered.append(und_expr)
-
+    # splits program into path in respect of the choice initially made [m / w]
     if type_of_report == "m":
         if len(filtered) > 0:
             unexpected_txt_filenames_stage_1 = []
