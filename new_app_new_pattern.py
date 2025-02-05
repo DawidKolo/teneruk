@@ -63,7 +63,7 @@ def week_or_month_of_year(date, var):
         return week_in_year
 
 
-def write_to_file(name, list, type_w_y):
+def write_to_file(name, type_w_y, list):
     if type_w_y == "m":
         if not os.path.isfile(path_out + "\\" + name):
             y = open(path_out + "\\" + name, "w")
@@ -84,14 +84,14 @@ def write_to_file(name, list, type_w_y):
         if not os.path.isfile(path_out + "\\" + name):
             y = open(path_out + "\\" + name, "w")
             for t in list:
-                if int(name[8:10]) == int(t[2][0:2]):
+                if int(name[8:10]) == int(t[1][0:2]):
                     line = ''.join(str(t))
                     y.write(line + "\n")
             y.close()
         else:
             y = open(path_out + "\\" + name, "w")
             for t in list:
-                if int(name[8:10]) == int(t[2][0:2]):
+                if int(name[8:10]) == int(t[1][0:2]):
                     line = ''.join(str(t))
                     y.write(line + "\n")
             y.close()
@@ -109,11 +109,11 @@ def undef_strings():  # this function writes unexpected values to a file
         j = open(path + "\\" + fle, "r")
         for line in j:
             top = line.replace("\n", "")
-            test.append((fle[20:28], top, week_or_month_of_year(fle[20:28], "w")))
+            test.append((fle[20:28], week_or_month_of_year(fle[20:28], "w"), top))
 
     filtered = []
     for und_expr in test:  # stores unexpected entries
-        if not re.match(pattern, und_expr[1]) and not re.match(pattern2, und_expr[1]):
+        if not re.match(pattern, und_expr[2]) and not re.match(pattern2, und_expr[2]):
             filtered.append(und_expr)
 
     if type_of_report == "m":
@@ -129,7 +129,7 @@ def undef_strings():  # this function writes unexpected values to a file
 
             for e in range(len(unexpected_txt_filenames_stage_2)):
                 un_exp_file = unexpected_txt_filenames_stage_2[e]
-                write_to_file(un_exp_file, filtered, type_of_report)
+                write_to_file(un_exp_file, type_of_report, filtered)
         print("There are additional unexpected entries! Check files for details: ", end=" ")
         for c in unexpected_txt_filenames_stage_2:
             print(c, end=" ")
@@ -149,7 +149,7 @@ def undef_strings():  # this function writes unexpected values to a file
 
             for g in w_unexpected_txt_file_s_2:
                 un_exp_file = g
-                write_to_file(un_exp_file, filtered, type_of_report)
+                write_to_file(un_exp_file, type_of_report, filtered)
 
             print(f"There are additional unexpected entries! Check files for details: ", end=" ")
             for c in w_unexpected_txt_file_s_2:
