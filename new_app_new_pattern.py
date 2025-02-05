@@ -50,32 +50,52 @@ def collect_txt_filenames():
             txt_files.append(file)
     return txt_files
 
-def week_or_month_of_year(date, var):
 
+def week_or_month_of_year(date, var):
     year = int(date[:4])
     month = int(date[5:6])
     day = int(date[6:9])
     if var == "w":
         week = datetime.date(year, month, day).isocalendar()[1]  # calculates the week of the year for a timestamp
+        week = f"{week:02d}"
         week_in_year = (str(week) + "-" + str(year))  # adds week-year strings to the variable
+
         return week_in_year
 
 
-def write_to_file(name, list):
-    if not os.path.isfile(path_out + "\\" + name):
-        y = open(path_out + "\\" + name, "w")
-        for t in list:
-            if int(name[7:9]) == int(t[0][4:6]):
-                line = ''.join(str(t))
-                y.write(line + "\n")
-        y.close()
-    else:
-        y = open(path_out + "\\" + name, "w")
-        for t in list:
-            if int(name[7:9]) == int(t[0][4:6]):
-                line = ''.join(str(t))
-                y.write(line + "\n")
-        y.close()
+def write_to_file(name, list, type_w_y):
+    if type_w_y == "m":
+        if not os.path.isfile(path_out + "\\" + name):
+            y = open(path_out + "\\" + name, "w")
+            for t in list:
+                if int(name[7:9]) == int(t[0][4:6]):
+                    line = ''.join(str(t))
+                    y.write(line + "\n")
+            y.close()
+        else:
+            y = open(path_out + "\\" + name, "w")
+            for t in list:
+                if int(name[7:9]) == int(t[0][4:6]):
+                    line = ''.join(str(t))
+                    y.write(line + "\n")
+            y.close()
+
+    elif type_w_y == "w":
+        if not os.path.isfile(path_out + "\\" + name):
+            y = open(path_out + "\\" + name, "w")
+            for t in list:
+                if int(name[8:10]) == int(t[2][0:2]):
+                    line = ''.join(str(t))
+                    y.write(line + "\n")
+            y.close()
+        else:
+            y = open(path_out + "\\" + name, "w")
+            for t in list:
+                if int(name[8:10]) == int(t[2][0:2]):
+                    line = ''.join(str(t))
+                    y.write(line + "\n")
+            y.close()
+
 
 def undef_strings():  # this function writes unexpected values to a file
     # Patterns to exclude
@@ -89,44 +109,51 @@ def undef_strings():  # this function writes unexpected values to a file
         j = open(path + "\\" + fle, "r")
         for line in j:
             top = line.replace("\n", "")
-            test.append((fle[20:28], top))
+            test.append((fle[20:28], top, week_or_month_of_year(fle[20:28], "w")))
 
     filtered = []
     for und_expr in test:  # stores unexpected entries
         if not re.match(pattern, und_expr[1]) and not re.match(pattern2, und_expr[1]):
             filtered.append(und_expr)
 
-
-    unexpected_txt_filenames_stage_1 = []
-    for r in range(len(filtered)):
-        unexpected_txt_filenames_stage_1.append(filtered[r][0][0:6])
-    unexpected_txt_filenames_stage_1 = list(dict.fromkeys(unexpected_txt_filenames_stage_1))
-
-
-    unexpected_txt_filenames_stage_2 = []
-    for q in unexpected_txt_filenames_stage_1:
-        unexpected_txt_filenames_stage_2.append("uf_" + q[0:6] + ".txt")
-
     if type_of_report == "m":
         if len(filtered) > 0:
+            unexpected_txt_filenames_stage_1 = []
+            for r in range(len(filtered)):
+                unexpected_txt_filenames_stage_1.append(filtered[r][0][0:6])
+            unexpected_txt_filenames_stage_1 = list(dict.fromkeys(unexpected_txt_filenames_stage_1))
+
+            unexpected_txt_filenames_stage_2 = []
+            for q in unexpected_txt_filenames_stage_1:
+                unexpected_txt_filenames_stage_2.append("uf_" + q[0:6] + ".txt")
+
             for e in range(len(unexpected_txt_filenames_stage_2)):
                 un_exp_file = unexpected_txt_filenames_stage_2[e]
-                write_to_file(un_exp_file, filtered)
+                write_to_file(un_exp_file, filtered, type_of_report)
         print("There are additional unexpected entries! Check files for details: ", end=" ")
         for c in unexpected_txt_filenames_stage_2:
             print(c, end=" ")
 
     elif type_of_report == "w":
-        for e in filtered:
-            filename_week = week_or_month_of_year(e[0], type_of_report)
-            un_exp_file = f"uf_{filename_week}.txt"
+        if len(filtered) > 0:
+            w_unexpected_txt_file_s_1 = []
+            for e in filtered:
+                filename_week = week_or_month_of_year(e[0], type_of_report)
 
-        if len(filtered) > 0 and type_of_report == "w":  # Prints statement and create/ update a txt file when unexpected entries are found
-            print(f"There are additional unexpected entries! Check {un_exp_file} file for details.")
-            write_to_file(un_exp_file, filtered)
+                w_unexpected_txt_file_s_1.append(filename_week)
+            w_unexpected_txt_file_s_1 = list(dict.fromkeys(w_unexpected_txt_file_s_1))
 
+            w_unexpected_txt_file_s_2 = []
+            for b in w_unexpected_txt_file_s_1:
+                w_unexpected_txt_file_s_2.append("week_uf_" + b + ".txt")
 
+            for g in w_unexpected_txt_file_s_2:
+                un_exp_file = g
+                write_to_file(un_exp_file, filtered, type_of_report)
 
+            print(f"There are additional unexpected entries! Check files for details: ", end=" ")
+            for c in w_unexpected_txt_file_s_2:
+                print(c, end=" ")
 
 
 # gets dates from the filenames and adds them to the list, returns list of tuples of integers
@@ -321,7 +348,7 @@ def insert_values_to_spreadsheet():
     wb.save(filename=myFilename_month)
 
     wb.close()
-    #    print(outer_val)
+
     return outer_val
 
 
