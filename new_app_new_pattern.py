@@ -281,7 +281,6 @@ def search_for_p():
         files = f.read()
 
         p_table = []
-
         for p in patterns:  # searches for P values in the txt files and writes them to the list
             match_p = re.findall(p, files)
             p_table.append(len(match_p))
@@ -297,9 +296,7 @@ def write_sheetname_to_wb():
     wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     for c in range(len(sheetname)):
-
         if not sheetname[c] in wb.sheetnames:  # creates sheetnames in the workbook if they don't exist
-
             wb.create_sheet(sheetname[c])
 
     wb.save(filename=myFilename_month)
@@ -311,6 +308,7 @@ def write_weekly_sheetname_to_wb():
     #    print("write_weekly_sheetname_to_wb")
     wb_week = load_workbook(filename=myFilename_week)
     sheetname = list(dict.fromkeys(create_sheetnames_weekly()[0]))  # gets unique item from a list
+
     for c in range(len(sheetname)):
         if not sheetname[c] in wb_week.sheetnames:  # creates sheetnames in the workbook if they don't exist
             wb_week.create_sheet(sheetname[c])
@@ -346,7 +344,6 @@ def insert_values_to_spreadsheet():
 
         outer_val.append(len(inner_val))
     wb.save(filename=myFilename_month)
-
     wb.close()
 
     return outer_val
@@ -361,6 +358,7 @@ def insert_values_to_spreadsheet_weekly():
     p_table = search_for_p()  # gets values of "P"s
     w_y = get_week_of_year()
     top_bar = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
+
     outer_val = []  # the list of lengths of lists inner_val
     for w in range(len(sh_name)):  # iterates through the list and get list of sheetnames
         ws = wb_week[sh_name[w]]
@@ -383,8 +381,8 @@ def insert_values_to_spreadsheet_weekly():
 
         outer_val.append(len(inner_val))  # adds values to the list
         wb_week.save(filename=myFilename_week)
-
         wb_week.close()
+
     return outer_val
 
 
@@ -396,7 +394,6 @@ def insert_monthly_sums_to_spreadsheet():
 
     for sh in range(len(sh_name)):  # iterates through sheetnames
         ws = wb[sh_name[sh]]
-
         paint_worksheets(ws, sh)  # styles the spreadsheets
 
         sums2 = ["=SUM(B1:B24)", "=SUM(C1:C24)", "=SUM(D1:D24)", "=SUM(E1:E24)", "=SUM(F1:F24)", "=SUM(G1:G24)",
@@ -437,7 +434,6 @@ def insert_weekly_sums_to_spreadsheet():
 type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
     check_xls_file()
-    search_for_p()
     write_sheetname_to_wb()
     insert_values_to_spreadsheet()
     insert_monthly_sums_to_spreadsheet()
@@ -445,7 +441,6 @@ if type_of_report == 'm':
 
 elif type_of_report == 'w':
     week_check_xls_file()
-    search_for_p()
     write_weekly_sheetname_to_wb()
     insert_values_to_spreadsheet_weekly()
     insert_weekly_sums_to_spreadsheet()
