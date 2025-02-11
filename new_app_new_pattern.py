@@ -12,9 +12,9 @@ path_out = "C:\\test\\001"
 filelist = os.listdir(path)
 week_xlsx_name = "\\week.xlsx"
 month_xlsx_name = "\\month.xlsx"
-patterns = [r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"]
+patterns = [r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"]
 for p in range(1,9):
-    patterns.append(fr"P{p}" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf")
+    patterns.append(fr"P{p}" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF")
 
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
@@ -43,6 +43,7 @@ def collect_txt_filenames():
     for file in filelist:  # iterates through files in folder and adds their filenames ending with txt, to the list
         if file.endswith(".txt"):
             txt_files.append(file)
+
     return txt_files
 
 
@@ -94,8 +95,8 @@ def write_to_file(name, type_w_y, list):
 
 def undef_strings():  # this function writes unexpected values to a file
     # Patterns to exclude
-    pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
-    pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".pdf"
+    pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"
+    pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"
 
     all_files = collect_txt_filenames()  # gets list od files
 
@@ -108,7 +109,7 @@ def undef_strings():  # this function writes unexpected values to a file
 
     filtered = []
     for und_expr in test:  # stores unexpected entries
-        if not re.match(pattern, und_expr[2]) and not re.match(pattern2, und_expr[2]):
+        if not re.match(pattern, und_expr[2].upper()) and not re.match(pattern2, und_expr[2].upper()):
             filtered.append(und_expr)
     # splits program into path in respect of the choice initially made [m / w]
     if type_of_report == "m":
@@ -273,7 +274,7 @@ def search_for_p():
 
     for txt_file in txt_files:  # opens txt files
         f = open(path + "\\" + txt_file, "r")
-        files = f.read()
+        files = f.read().upper()
 
         p_table = []
         for p in patterns:  # searches for P values in the txt files and writes them to the list
