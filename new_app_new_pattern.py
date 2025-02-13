@@ -15,7 +15,7 @@ month_xlsx_name = "\\month.xlsx"
 patterns = [r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"]
 for p in range(1,9):
     patterns.append(fr"P{p}" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF")
-
+top_bar = ["PRECISELY", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 myFilename_month = path_out + month_xlsx_name
 myFilename_week = path_out + week_xlsx_name
 
@@ -96,7 +96,7 @@ def write_to_file(name, type_w_y, list):
 def undef_strings():  # this function writes unexpected values to a file
     # Patterns to exclude
     pattern = r"P[0-9]" + "_" + "[0-9][0-9][0-9][0-9]" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"
-    pattern2 = r"PRECISELY" + "_" + "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" + ".PDF"
+    pattern2 = patterns[0]
 
     all_files = collect_txt_filenames()  # gets list od files
 
@@ -319,7 +319,6 @@ def insert_values_to_spreadsheet():
     wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     date = create_sheetnames()[1]
-    top_bar = ["PRECISELY", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
     p_table = search_for_p()
 
     outer_val = []  # the list of lengths of lists inner_val
@@ -353,7 +352,7 @@ def insert_values_to_spreadsheet_weekly():
     date = create_sheetnames_weekly()[1]  # gets list of sheetnames [week-year]
     p_table = search_for_p()  # gets values of "P"s
     w_y = get_week_of_year()
-    top_bar = ["PRECISELY", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
+
 
     outer_val = []  # the list of lengths of lists inner_val
     for w in range(len(sh_name)):  # iterates through the list and get list of sheetnames
