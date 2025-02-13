@@ -319,7 +319,7 @@ def insert_values_to_spreadsheet():
     wb = load_workbook(filename=myFilename_month)
     sheetname = list(dict.fromkeys(create_sheetnames()[0]))  # gets unique items from a list
     date = create_sheetnames()[1]
-    top_bar = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
+    top_bar = ["PRECISELY", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
     p_table = search_for_p()
 
     outer_val = []  # the list of lengths of lists inner_val
@@ -353,7 +353,7 @@ def insert_values_to_spreadsheet_weekly():
     date = create_sheetnames_weekly()[1]  # gets list of sheetnames [week-year]
     p_table = search_for_p()  # gets values of "P"s
     w_y = get_week_of_year()
-    top_bar = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "PRECISELY"]
+    top_bar = ["PRECISELY", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"]
 
     outer_val = []  # the list of lengths of lists inner_val
     for w in range(len(sh_name)):  # iterates through the list and get list of sheetnames
