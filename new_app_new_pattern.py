@@ -61,36 +61,21 @@ def week_or_month_of_year(date, var):
 
 def write_to_file(name, type_w_y, list):
     if type_w_y == "m":
-        if not os.path.isfile(path_out + "\\" + name):
-            y = open(path_out + "\\" + name, "w")
-            for t in list:
-                if int(name[7:9]) == int(t[0][4:6]):
-                    line = ''.join(str(t))
-                    y.write(line + "\n")
-            y.close()
-        else:
-            y = open(path_out + "\\" + name, "w")
-            for t in list:
-                if int(name[7:9]) == int(t[0][4:6]):
-                    line = ''.join(str(t))
-                    y.write(line + "\n")
-            y.close()
+        y = open(path_out + "\\" + name, "w")
+        for t in list:
+            if int(name[7:9]) == int(t[0][4:6]):
+                line = ''.join(str(t))
+                y.write(line + "\n")
+        y.close()
+
 
     elif type_w_y == "w":
-        if not os.path.isfile(path_out + "\\" + name):
-            y = open(path_out + "\\" + name, "w")
-            for t in list:
-                if int(name[8:10]) == int(t[1][0:2]):
-                    line = ''.join(str(t))
-                    y.write(line + "\n")
-            y.close()
-        else:
-            y = open(path_out + "\\" + name, "w")
-            for t in list:
-                if int(name[8:10]) == int(t[1][0:2]):
-                    line = ''.join(str(t))
-                    y.write(line + "\n")
-            y.close()
+        y = open(path_out + "\\" + name, "w")
+        for t in list:
+            if int(name[8:10]) == int(t[1][0:2]):
+                line = ''.join(str(t))
+                y.write(line + "\n")
+        y.close()
 
 
 def undef_strings():  # this function writes unexpected values to a file
