@@ -111,9 +111,9 @@ def undef_strings():  # this function writes unexpected values to a file
             for e in range(len(unexpected_txt_filenames_stage_2)):
                 un_exp_file = unexpected_txt_filenames_stage_2[e]
                 write_to_file(un_exp_file, type_of_report, filtered)
-        print("There are additional unexpected entries! Check files for details: ", end=" ")
-        for c in unexpected_txt_filenames_stage_2:
-            print(c, end=" ")
+            print("There are additional unexpected entries! Check files for details: ", end=" ")
+            for c in unexpected_txt_filenames_stage_2:
+                print(c, end=" ")
 
     elif type_of_report == "w":
         if len(filtered) > 0:
