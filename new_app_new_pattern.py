@@ -21,19 +21,16 @@ myFilename_week = path_out + week_xlsx_name
 
 
 # checks if the xlsx file exists -> if not creates a new one
-def check_xls_file():
-    #    print("check_xls_file")
-    if not os.path.isfile(path_out + month_xlsx_name):
-        excel = xlsxwriter.Workbook(path_out + month_xlsx_name)
-        excel.close()
 
-
-# checks if the xlsx file exists -> if not creates a new one
-def week_check_xls_file():
-    #    print("week_check_xls_file")
-    if not os.path.isfile(path_out + week_xlsx_name):
-        excel = xlsxwriter.Workbook(path_out + week_xlsx_name)
-        excel.close()
+def check_for_xls_file(type):
+    if type=="w":
+        if not os.path.isfile(path_out + week_xlsx_name):
+            excel = xlsxwriter.Workbook(path_out + week_xlsx_name)
+            excel.close()
+    elif type == "m":
+        if not os.path.isfile(path_out + month_xlsx_name):
+            excel = xlsxwriter.Workbook(path_out + month_xlsx_name)
+            excel.close()
 
 
 # gets filenames od txt files and adds them to the list, returns the list of strings
@@ -413,14 +410,14 @@ def insert_weekly_sums_to_spreadsheet():
 # starts the program
 type_of_report = input('What type of report would you like to create? [m - monthly | w - weekly] ').lower()
 if type_of_report == 'm':
-    check_xls_file()
+    check_for_xls_file(type_of_report)
     write_sheetname_to_wb()
     insert_values_to_spreadsheet()
     insert_monthly_sums_to_spreadsheet()
     undef_strings()
 
 elif type_of_report == 'w':
-    week_check_xls_file()
+    check_for_xls_file(type_of_report)
     write_weekly_sheetname_to_wb()
     insert_values_to_spreadsheet_weekly()
     insert_weekly_sums_to_spreadsheet()
